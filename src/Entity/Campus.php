@@ -29,9 +29,15 @@ class Campus
      */
     private $participants;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="campusOrganisateur", orphanRemoval=true)
+     */
+    private $sortiesCampus;
+
     public function __construct()
     {
         $this->participants = new ArrayCollection();
+        $this->sortiesCampus = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -75,6 +81,36 @@ class Campus
             // set the owning side to null (unless already changed)
             if ($participant->getCampus() === $this) {
                 $participant->setCampus(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Sortie[]
+     */
+    public function getSortiesCampus(): Collection
+    {
+        return $this->sortiesCampus;
+    }
+
+    public function addSortiesCampus(Sortie $sortiesCampus): self
+    {
+        if (!$this->sortiesCampus->contains($sortiesCampus)) {
+            $this->sortiesCampus[] = $sortiesCampus;
+            $sortiesCampus->setCampusOrganisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSortiesCampus(Sortie $sortiesCampus): self
+    {
+        if ($this->sortiesCampus->removeElement($sortiesCampus)) {
+            // set the owning side to null (unless already changed)
+            if ($sortiesCampus->getCampusOrganisateur() === $this) {
+                $sortiesCampus->setCampusOrganisateur(null);
             }
         }
 
