@@ -70,6 +70,11 @@ class Participant
      */
     private $sortiesParticipations;
 
+    /**
+     * @ORM\Column(type="string", length=50)
+     */
+    private $pseudo;
+
     public function __construct()
     {
         $this->sortiesOrganisees = new ArrayCollection();
@@ -230,6 +235,18 @@ class Participant
         if ($this->sortiesParticipations->removeElement($sortiesParticipation)) {
             $sortiesParticipation->removeParticipantInscrit($this);
         }
+
+        return $this;
+    }
+
+    public function getPseudo(): ?string
+    {
+        return $this->pseudo;
+    }
+
+    public function setPseudo(string $pseudo): self
+    {
+        $this->pseudo = $pseudo;
 
         return $this;
     }
