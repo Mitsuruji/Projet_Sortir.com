@@ -1,19 +1,40 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {# Run `composer require symfony/webpack-encore-bundle`
-           and uncomment the following Encore helpers to start using Symfony UX #}
-        {% block stylesheets %}
-            {#{{ encore_entry_link_tags('app') }}#}
-        {% endblock %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=yes, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title%}Bucket-list{% endblock %}</title>
 
-        {% block javascripts %}
-            {#{{ encore_entry_script_tags('app') }}#}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+    {# google font#}
+
+    {# css#}
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}" type="text/css">
+    {# favicon#}
+    <!-- <link rel="icon" href="{{ asset('img/favicon.png') }}"> -->
+</head>
+
+<body>
+<header>
+    <h1>Sortir.com!</h1>
+</header>
+
+{# read and display all flash messages #}
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="flash flash-{{ label }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endfor %}
+
+<main>
+    {% block body%}{% endblock %}
+</main>
+
+<footer>
+    <p>© Sortir.com! - {{ "now"|date("Y")}} </p>
+</footer>
+</body>
 </html>

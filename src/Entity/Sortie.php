@@ -50,23 +50,6 @@ class Sortie
     private $infosSortie;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="sortiesCampus")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $campusOrganisateur;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Participant::class, inversedBy="sortiesOrganisees")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $participantOrganisateur;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Participant::class, inversedBy="sortiesParticipations")
-     */
-    private $participantInscrit;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Etat::class, inversedBy="sortiesEtat")
      */
     private $etat;
@@ -76,6 +59,17 @@ class Sortie
      * @ORM\JoinColumn(nullable=false)
      */
     private $sortieLieu;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Participant::class, inversedBy="sortiesOrganisees")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $participantOrganisateur;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Participant::class, mappedBy="sortiesParticipations")
+     */
+    private $participantInscrit;
 
     public function __construct()
     {
@@ -160,14 +154,26 @@ class Sortie
         return $this;
     }
 
-    public function getCampusOrganisateur(): ?Campus
+    public function getEtat(): ?Etat
     {
-        return $this->campusOrganisateur;
+        return $this->etat;
     }
 
-    public function setCampusOrganisateur(?Campus $campusOrganisateur): self
+    public function setEtat(?Etat $etat): self
     {
-        $this->campusOrganisateur = $campusOrganisateur;
+        $this->etat = $etat;
+
+        return $this;
+    }
+
+    public function getSortieLieu(): ?Lieu
+    {
+        return $this->sortieLieu;
+    }
+
+    public function setSortieLieu(?Lieu $sortieLieu): self
+    {
+        $this->sortieLieu = $sortieLieu;
 
         return $this;
     }
@@ -196,6 +202,7 @@ class Sortie
     {
         if (!$this->participantInscrit->contains($participantInscrit)) {
             $this->participantInscrit[] = $participantInscrit;
+            $participantInscrit->addSortiesParticipation($this);
         }
 
         return $this;
@@ -203,31 +210,9 @@ class Sortie
 
     public function removeParticipantInscrit(Participant $participantInscrit): self
     {
-        $this->participantInscrit->removeElement($participantInscrit);
-
-        return $this;
-    }
-
-    public function getEtat(): ?Etat
-    {
-        return $this->etat;
-    }
-
-    public function setEtat(?Etat $etat): self
-    {
-        $this->etat = $etat;
-
-        return $this;
-    }
-
-    public function getSortieLieu(): ?Lieu
-    {
-        return $this->sortieLieu;
-    }
-
-    public function setSortieLieu(?Lieu $sortieLieu): self
-    {
-        $this->sortieLieu = $sortieLieu;
+        if ($this->participantInscrit->removeElement($participantInscrit)) {
+            $participantInscrit->removeSortiesParticipation($this);
+        }
 
         return $this;
     }

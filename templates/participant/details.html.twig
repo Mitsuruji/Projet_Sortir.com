@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails participant | {{ parent() }}{% endblock %}
+
+{% block body %}
+    <h2>Détails participant:</h2>
+
+    <div id="infosParticipant">
+        <table>
+            <tbody>
+            <tr>
+                <td>Nom: </td>
+                <td>{{ participant.nom }}</td>
+            </tr>
+            <tr>
+                <td>Prenom: </td>
+                <td>{{ participant.prenom }}</td>
+            </tr>
+            <tr>
+                <td>Pseudo:</td>
+                <td>{{ participant.username }}</td>
+            </tr>
+            <tr>
+                <td>Telephone:</td>
+                <td>{{ participant.telephone }}</td>
+            </tr>
+            <tr>
+                <td>Email:</td>
+                <td>{{ participant.mail}}</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <a href=""><button>Modifier mes infos</button></a>
+
+
+        <p> debug, a supprimer <br/>
+            Admin: {{ participant.administrateur}} <br/>
+            Actif: {{ participant.actif}} <br/>
+        </p>
+
+    </div>
+
+
+{% endblock %}
