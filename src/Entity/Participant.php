@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ParticipantRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -57,6 +59,22 @@ class Participant
      * @ORM\JoinColumn(nullable=false)
      */
     private $campus;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="participantOrganisateur")
+     */
+    private $sortiesOrganisees;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Sortie::class, mappedBy="participantInscrit")
+     */
+    private $sortiesParticipations;
+
+    public function __construct()
+    {
+        $this->sortiesOrganisees = new ArrayCollection();
+        $this->sortiesParticipations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -155,6 +173,63 @@ class Participant
     public function setCampus(?Campus $campus): self
     {
         $this->campus = $campus;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Sortie[]
+     */
+    public function getSortiesOrganisees(): Collection
+    {
+        return $this->sortiesOrganisees;
+    }
+
+    public function addSortiesOrganisee(Sortie $sortiesOrganisee): self
+    {
+        if (!$this->sortiesOrganisees->contains($sortiesOrganisee)) {
+            $this->sortiesOrganisees[] = $sortiesOrganisee;
+            $sortiesOrganisee->setParticipantOrganisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSortiesOrganisee(Sortie $sortiesOrganisee): self
+    {
+        if ($this->sortiesOrganisees->removeElement($sortiesOrganisee)) {
+            // set the owning side to null (unless already changed)
+            if ($sortiesOrganisee->getParticipantOrganisateur() === $this) {
+                $sortiesOrganisee->setParticipantOrganisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Sortie[]
+     */
+    public function getSortiesParticipations(): Collection
+    {
+        return $this->sortiesParticipations;
+    }
+
+    public function addSortiesParticipation(Sortie $sortiesParticipation): self
+    {
+        if (!$this->sortiesParticipations->contains($sortiesParticipation)) {
+            $this->sortiesParticipations[] = $sortiesParticipation;
+            $sortiesParticipation->addParticipantInscrit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSortiesParticipation(Sortie $sortiesParticipation): self
+    {
+        if ($this->sortiesParticipations->removeElement($sortiesParticipation)) {
+            $sortiesParticipation->removeParticipantInscrit($this);
+        }
 
         return $this;
     }
