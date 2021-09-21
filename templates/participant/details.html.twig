@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Détails participant | {{ parent() }}{% endblock %}
+{% block title %}Mon profil | {{ parent() }}{% endblock %}
 
 {% block body %}
-    <h2>Détails participant:</h2>
+    <h2>Mon profil:</h2>
 
     <div id="infosParticipant">
         <table>
@@ -31,10 +31,9 @@
             </tbody>
         </table>
 
-        <a href=""><button>Modifier mes infos</button></a>
+        <a href="{{ path('participant_update', {'id':participant.id}) }}"><button>Modifier mes infos</button></a>
 
-
-        <p> debug, a supprimer <br/>
+        <p> debug, à supprimer <br/>
             Admin: {{ participant.administrateur}} <br/>
             Actif: {{ participant.actif}} <br/>
         </p>

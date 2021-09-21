@@ -1,0 +1,10 @@
+<nav>
+    <a href="{{ path('main_home') }}" title="Home">Home</a>
+    {% if app.user %}
+
+    {% else %}
+        <a href="{{ path('app_register') }}" title="Register">Register</a>
+        <a href="{{ path('app_login') }}" title="Login">Login</a>
+    {% endif %}
+    <a href="{{ asset('/Projet_Sortir.com/public/participant/details/1') }}" title="">Détails profil test (id=1)</a>
+</nav>

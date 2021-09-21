@@ -1,18 +1,45 @@
 
-/* header */
+/* -----------------------header------------------ */
 
 
 
-/* nav */
+/* ----------------------nav---------------------- */
+nav a{
+    margin-right: 5%;
+}
 
 
 
+/* ----------------------body------------------- */
 
-/* body */
+/* messages flash*/
+.flash{
+    padding: 20px;
+    font-weight: bold;
+    font-size: 1.4rem;
+    margin: 1rem 0;
+    border-radius: 5px;
+    width: 50%;
+}
+.flash-success{
+    background-color: #7eeeaf;
+}
+.flash-warning{
+    background-color: #f39190;
+}
+
+/* formulaire*/
+form{
+    display: grid;
+    max-width: 100px;
+    box-sizing: border-box;
+}
+input,
+select{
+    margin-bottom: 1em;
+}
 
 
-
-
-/* footer */
+/* ----------------------footer------------------- */
 
 
