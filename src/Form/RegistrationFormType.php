@@ -24,6 +24,9 @@ class RegistrationFormType extends AbstractType
             ->add('nom', TextType::class, [
                 'attr' => ['placeholder' => '50 caractères max'],
                 'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please enter a pseudo',
+                    ]),
                     new Length([
                         'max' => 50,
                         'maxMessage' => 'Your nom should be less than {{ limit }} characters'

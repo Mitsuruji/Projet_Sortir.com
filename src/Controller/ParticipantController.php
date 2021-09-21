@@ -56,15 +56,9 @@ class ParticipantController extends AbstractController
             $entityManager->persist($participant);
             $entityManager->flush();
 
-            $debug = 'passage validé';
-            dump($debug);
-
             $this->addFlash('success', 'Modification des informations réussie !');
             return $this->render('participant/details.html.twig', ["participant"=>$participant]);
         }
-
-        $debug = 'passage non validé';
-        dump($debug);
 
         if ($form->isSubmitted() && !$form->isValid()) {
             $this->addFlash('warning', 'Erreur dans le formulaire update');
@@ -88,6 +82,7 @@ class ParticipantController extends AbstractController
         }
 
         $form=$this->createForm(RegistrationFormType::class, $participant);
+
         //desactivation des champs non nécessaires
         $form->remove('nom');
         $form->remove('prenom');
@@ -111,11 +106,13 @@ class ParticipantController extends AbstractController
             $entityManager->persist($participant);
             $entityManager->flush();
 
+            echo 'passage valid';
+
             $this->addFlash('success', 'Modification mot de passe réussie !');
             return $this->render('participant/details.html.twig', ["participant"=>$participant]);
         }
 
-        echo 'passage non valid';
+
 
         if ($form->isSubmitted() && !$form->isValid()) {
             $this->addFlash('warning', 'Erreur dans le formulaire du mot de passe');
