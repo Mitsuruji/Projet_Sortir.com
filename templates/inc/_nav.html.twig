@@ -2,6 +2,8 @@
     <a href="{{ path('main_home') }}" title="Home">Home</a>
     {% if app.user %}
         <a href="{{ path('app_logout') }}" title="Logout">Logout  ({{ app.user.username }})</a>
+        <a href="{{ path('sortie') }}" title="sortie">Sortie</a>
+
     {% else %}
         <a href="{{ path('app_register') }}" title="Register">Register</a>
         <a href="{{ path('app_login') }}" title="Login">Login</a>
