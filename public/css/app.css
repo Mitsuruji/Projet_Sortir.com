@@ -12,6 +12,12 @@ nav a{
 
 /* ----------------------body------------------- */
 
+main{
+    display: grid;
+    justify-content: center;
+}
+
+
 /* messages flash*/
 .flash{
     padding: 20px;
@@ -35,7 +41,9 @@ form{
     box-sizing: border-box;
 }
 input,
-select{
+select,
+button,
+table{
     margin-bottom: 1em;
 }
 
