@@ -69,7 +69,7 @@ class Participant implements UserInterface
     private $actif;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Campus::class)
+     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="participants")
      * @ORM\JoinColumn(nullable=false)
      */
     private $campus;

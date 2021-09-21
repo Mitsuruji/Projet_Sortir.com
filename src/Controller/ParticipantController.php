@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Participant;
 use App\Form\RegistrationFormType;
+use App\Form\UpdateParticipantFormType;
 use App\Repository\ParticipantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,8 +34,8 @@ class ParticipantController extends AbstractController
     /**
      * @Route("/participant/details/{id}/update", name="participant_update")
      */
-    /*
-    public function updateDetails(int $id, Participant $participant, EntityManagerInterface $entityManager, Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+
+    public function updateDetails(int $id, EntityManagerInterface $entityManager, Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {
         //récupération du participant à modifier dans la bdd
         $participant= $entityManager->getRepository(Participant::class)->find($id);
@@ -60,15 +61,17 @@ class ParticipantController extends AbstractController
             $entityManager->persist($participant);
             $entityManager->flush();
 
-
-            if ($form->isSubmitted() && !$form->isValid()) {
-                $this->addFlash('warning', 'Erreur dans le formulaire');
-            }
-
-            return $this->render('registration/register.html.twig', [
-                'registrationForm' => $form->createView()
-            ]);
+            $this->addFlash('success', 'Modification des informations réussie !');
+            return $this->render('participant/details.html.twig', ["participant"=>$participant]);
         }
+
+
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $this->addFlash('warning', 'Erreur dans le formulaire');
+        }
+
+        return $this->render('registration/register.html.twig', [
+            'registrationForm' => $form->createView()]);
     }
-    */
+
 }

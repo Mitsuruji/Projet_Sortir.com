@@ -29,7 +29,7 @@ class RegistrationFormType extends AbstractType
                     ]),
                     new Length([
                         'max' => 50,
-                        'maxMessage' => 'Your pseudo should be less than {{ limit }} characters'
+                        'maxMessage' => 'Your nom should be less than {{ limit }} characters'
                     ])
                 ]
             ])
@@ -40,11 +40,21 @@ class RegistrationFormType extends AbstractType
                     ]),
                     new Length([
                         'max' => 50,
-                        'maxMessage' => 'Your pseudo should be less than {{ limit }} characters'
+                        'maxMessage' => 'Your prenom should be less than {{ limit }} characters'
                     ])
                 ]
             ])
-            ->add('telephone')
+            ->add('telephone', TextType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please enter a pseudo',
+                    ]),
+                    new Length([
+                        'max' => 30,
+                        'maxMessage' => 'Your telephone should be less than {{ limit }} characters'
+                    ])
+                ]
+            ])
             ->add('username', TextType::class, [
                 'label' => 'Pseudo',
                 'constraints' => [
