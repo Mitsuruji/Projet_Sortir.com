@@ -1,6 +1,9 @@
 #ignorer les réglages de phpstorm
 /.idea/
 
+#ignorer le dossier fixture
+/fixtures/
+
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php

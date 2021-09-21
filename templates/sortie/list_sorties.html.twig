@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello SortieController!{% endblock %}
+
+{% block body %}
+   <table>
+       <thead>
+        <tr>
+            <th>Nom de la sortie</th>
+            <th>Date de la sortie</th>
+            <th>Clôture</th>
+            <th>Inscrits/Places</th>
+            <th>Etat</th>
+            <th>Inscrit</th>
+            <th>Organisateur</th>
+            <th>Actions</th>
+        </tr>
+       </thead>
+       <tbody>
+        {% for sortie in sorties %}
+            {% include 'sortie/details.html.twig' with {sortie: sortie} only %}
+        {% endfor %}
+       </tbody>
+   </table>
+{% endblock %}
