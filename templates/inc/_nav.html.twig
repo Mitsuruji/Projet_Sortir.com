@@ -1,11 +1,11 @@
 <nav>
     <a href="{{ path('main_home') }}" title="Home">Home</a>
     {% if app.user %}
-        <a href="{{ path('app_logout') }}" title="Logout">Logout  ({{ app.user.username }})</a>
+        <a href="{{ path('app_logout') }}" title="Logout">Se déconnecter</a>
     {% else %}
-        <a href="{{ path('app_register') }}" title="Register">Register</a>
-        <a href="{{ path('app_login') }}" title="Login">Login</a>
+        <a href="{{ path('app_register') }}" title="Register">S'enregistrer</a>
+        <a href="{{ path('app_login') }}" title="Login">Se connecter</a>
 
     {% endif %}
-    <a href="{{ path('participant_details', {'id':1}) }}" title="">Détails </a>
+    <a href="{{ asset('/Projet_Sortir.com/public/participant/details/1') }}" title="">Détails profil test (id=1)</a>
 </nav>

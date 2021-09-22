@@ -48,13 +48,13 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator implements Passwor
     public function getCredentials(Request $request)
     {
         $credentials = [
-            'username' => $request->request->get('username'),
+            'mail_or_username' => $request->request->get('mail_or_username'),
             'password' => $request->request->get('password'),
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
         $request->getSession()->set(
             Security::LAST_USERNAME,
-            $credentials['username']
+            $credentials['mail_or_username']
         );
 
         return $credentials;
@@ -67,7 +67,8 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator implements Passwor
             throw new InvalidCsrfTokenException();
         }
 
-        $user = $this->entityManager->getRepository(Participant::class)->findOneBy(['username' => $credentials['username']]);
+        //$user = $this->entityManager->getRepository(Participant::class)->findOneBy(['username' => $credentials['username']]);
+        $user = $this->entityManager->getRepository(Participant::class)->findByMailOrUsername((string)$credentials['mail_or_username']);
 
         if (!$user) {
             throw new UsernameNotFoundException('Username could not be found.');
