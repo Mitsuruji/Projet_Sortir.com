@@ -6,7 +6,20 @@
     <td>{{ sortie.etat.libelle }}</td>
     <td>todo inscrit</td>
     <td>{{ sortie.participantOrganisateur.username }}</td>
-    <td>todo actions</td>
+    <td>
+        {% if app.user.username==sortie.participantOrganisateur.username %}
+            <a href="#" title="Afficher sortie">Modifier</a>
+        {% else%}
+            <a href="#" title="Afficher sortie">Afficher</a> -
+
+            {% if inscrit == true %}
+                  <a href="{{ path('#', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}" title="Se desister sortie">Se desister</a>
+            {% else %}
+                <a href="{{ path('sortie_inscription', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}" title="S'incrire sortie">S'inscrire</a>
+            {% endif %}
+
+        {% endif %}
+    </td>
 </tr>
 
 
