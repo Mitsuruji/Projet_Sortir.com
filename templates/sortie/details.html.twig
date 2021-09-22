@@ -1,0 +1,12 @@
+<tr>
+    <td>{{ sortie.nom }}</td>
+    <td>{{ sortie.dateHeureDebut|date("d/m/y H:i") }}</td>
+    <td>{{ sortie.dateLimiteInscription|date("Y-m-d") }}</td>
+    <td>{{ sortie.participantInscrit.count }} / {{ sortie.nbInscriptionsMax }}</td>
+    <td>{{ sortie.etat.libelle }}</td>
+    <td>todo inscrit</td>
+    <td>{{ sortie.participantOrganisateur.username }}</td>
+    <td>todo actions</td>
+</tr>
+
+
