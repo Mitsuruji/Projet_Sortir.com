@@ -1,7 +1,7 @@
 <nav>
     <a href="{{ path('main_home') }}" title="Home">Home</a>
     {% if app.user %}
-        <a href="{{ path('app_logout') }}" title="Logout">Se déconnecter</a>
+        <a href="{{ path('app_logout') }}" title="Logout">Se déconnecter  ({{ app.user.username }})</a>
     {% else %}
         <a href="{{ path('app_register') }}" title="Register">S'enregistrer</a>
         <a href="{{ path('app_login') }}" title="Login">Se connecter</a>
