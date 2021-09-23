@@ -3,6 +3,14 @@
 {% block title %}Hello SortieController!{% endblock %}
 
 {% block body %}
+    <div>
+        <h3 style="text-align: right">Date du jour : {{ "now"|date("d/m/Y") }}<br>
+            Participant : {{ app.user.username }}
+        </h3>
+    </div>
+    <div style="display: flex">
+        {% include 'sortie/searchOptions.html.twig' with {searchSortiesForm:searchSortiesForm} only%}
+    </div>
    <table>
        <thead>
         <tr>
