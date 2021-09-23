@@ -2,26 +2,36 @@
 
 namespace App\Controller;
 
-use App\Entity\Participant;
+use App\Data\SearchOptions;
 use App\Entity\Sortie;
+use App\Form\SearchSortiesType;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class SortieController extends AbstractController
 {
     /**
-     * @Route("/listsortie", name="sortie")
+     * @Route("/", name="sortie_search")
      */
-    public function sortie(SortieRepository $sortieRepository): Response
+    public function sortie(SortieRepository $sortieRepository, Request $request): Response
     {
-        $sorties = $sortieRepository->findSearch();
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->getUser();
+        $data = new SearchOptions();
+        $data->setCurrentUser($user);
 
+        $form = $this->createForm(SearchSortiesType::class, $data);
+        $form->handleRequest($request);
+
+        $sorties = $sortieRepository->findSearch($data);
         return $this->render('sortie/list_sorties.html.twig', [
-            'sorties' => $sorties
+            'sorties' => $sorties,
+            'searchSortiesForm' => $form->createView()
         ]);
     }
 
@@ -49,6 +59,4 @@ class SortieController extends AbstractController
             return $this->render('main/home.html.twig');
         }
     }
-
-
 }

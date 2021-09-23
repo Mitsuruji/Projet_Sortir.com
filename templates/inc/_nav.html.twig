@@ -1,9 +1,9 @@
 <nav>
-    <a href="{{ path('main_home') }}" title="Home">Home</a>
+    <a href="{{ path('sortie_search') }}" title="Home">Home</a>
 
 
     {% if app.user %}
-        <a href="{{ path('sortie') }}" title="Liste sorties">Liste des sorties</a>
+{#        <a href="{{ path('sortie_search') }}" title="Liste sorties">Liste des sorties</a>#}
         <a href="{{ path('participant_details', {'id':app.user.id})}}" title="">Détails profil</a>
         <a href="{{ path('app_logout') }}" title="Logout">Se déconnecter  ({{ app.user.username }})</a>
 
