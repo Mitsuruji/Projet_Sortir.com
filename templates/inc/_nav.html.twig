@@ -1,11 +1,15 @@
 <nav>
-    <a href="{{ path('main_home') }}" title="Home">Home</a>
+    <a href="{{ path('sortie_search') }}" title="Home">Home</a>
+
+
     {% if app.user %}
-        <a href="{{ path('app_logout') }}" title="Logout">Se déconnecter</a>
+{#        <a href="{{ path('sortie_search') }}" title="Liste sorties">Liste des sorties</a>#}
+        <a href="{{ path('participant_details', {'id':app.user.id})}}" title="">Mon profil</a>
+        <a href="{{ path('app_logout') }}" title="Logout">Se déconnecter  ({{ app.user.username }})</a>
+
     {% else %}
-        <a href="{{ path('app_register') }}" title="Register">S'enregistrer</a>
         <a href="{{ path('app_login') }}" title="Login">Se connecter</a>
+        <a href="{{ path('app_register') }}" title="Register">S'enregistrer</a>
 
     {% endif %}
-    <a href="{{ asset('/Projet_Sortir.com/public/participant/details/1') }}" title="">Détails profil test (id=1)</a>
 </nav>

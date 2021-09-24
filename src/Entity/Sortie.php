@@ -67,9 +67,20 @@ class Sortie
     private $participantOrganisateur;
 
     /**
+     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="sortiesCampus")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $campusOrganisateur;
+
+    /**
      * @ORM\ManyToMany(targetEntity=Participant::class, mappedBy="sortiesParticipations")
      */
     private $participantInscrit;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $motifAnnulation;
 
     public function __construct()
     {
@@ -190,6 +201,18 @@ class Sortie
         return $this;
     }
 
+    public function getCampusOrganisateur(): ?Campus
+    {
+        return $this->campusOrganisateur;
+    }
+
+    public function setCampusOrganisateur(?Campus $campusOrganisateur): self
+    {
+        $this->campusOrganisateur = $campusOrganisateur;
+
+        return $this;
+    }
+
     /**
      * @return Collection|Participant[]
      */
@@ -213,6 +236,18 @@ class Sortie
         if ($this->participantInscrit->removeElement($participantInscrit)) {
             $participantInscrit->removeSortiesParticipation($this);
         }
+
+        return $this;
+    }
+
+    public function getMotifAnnulation(): ?string
+    {
+        return $this->motifAnnulation;
+    }
+
+    public function setMotifAnnulation(?string $motifAnnulation): self
+    {
+        $this->motifAnnulation = $motifAnnulation;
 
         return $this;
     }

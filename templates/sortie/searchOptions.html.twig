@@ -1,0 +1,22 @@
+{{ form_start(searchSortiesForm) }}
+<h4>Filtrer les sorties</h4>
+
+    {{ form_row(searchSortiesForm.choixCampus) }}
+
+    {{ form_row(searchSortiesForm.filterNomSortie) }}
+
+    {{ form_row(searchSortiesForm.filterDateMin) }}
+
+    {{ form_row(searchSortiesForm.filterDateMax) }}
+
+
+
+
+    {{ form_row(searchSortiesForm.filterIsOrganisateur) }}
+    {{ form_row(searchSortiesForm.filterIsInscris) }}
+    {{ form_row(searchSortiesForm.filterIsPasInscris) }}
+    {{ form_row(searchSortiesForm.filterSortiesPassees) }}
+
+
+<button type="submit" class="btn">Rechercher</button>
+{{ form_end(searchSortiesForm) }}

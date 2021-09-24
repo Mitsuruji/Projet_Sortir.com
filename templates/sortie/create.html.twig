@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Créer une nouvelle sortie
+{% endblock %}
+
+{% block body %}
+    <div>
+        {{ form_start(sortieForm) }}
+        {{ form_row(sortieForm.nom) }}
+        {{ form_row(sortieForm.dateHeureDebut) }}
+        {{ form_row(sortieForm.duree) }}
+        {{ form_row(sortieForm.sortieLieu) }}
+        <div>
+            <input type="button" value="Ajouter un nouveau lieu">
+        </div>
+        {{ form_row(sortieForm.nbInscriptionsMax) }}
+        {{ form_row(sortieForm.infosSortie) }}
+        {{ form_row(sortieForm.dateLimiteInscription) }}
+        <div>
+            <input type="submit" value="Enregistrer la nouvelle sortie">
+        </div>
+    </div>
+{% endblock %}
+
+
+
