@@ -43,16 +43,65 @@ class SortieController extends AbstractController
         try {
             //récupération instance Participant et Sortie
             $sorties = $entityManager->getRepository(Sortie::class)->find($idSortie);
-            $participant = $participantRepository->find($idParticipant);
 
-            //insert BDD (table: participant_sortie)
-            $sorties->addParticipantInscrit($participant);
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($participant);
-            $entityManager->flush();
 
-            $this->addFlash('success', 'Inscription à la sortie réussi ! Amusez-vous bien !');
+            if ($sorties->getParticipantInscrit()->count() >= $sorties->getNbInscriptionsMax()){
+                $this->addFlash('warning', 'Sortie au complet, impossible de s\'inscrire!');
+                return $this->render('main/home.html.twig');
+            }
+            else{
+                $participant = $participantRepository->find($idParticipant);
+                if ($this->getUser()->getUsername() == $participant->getUsername()){
+                    //insert BDD (table: participant_sortie)
+                    $sorties->addParticipantInscrit($participant);
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($participant);
+                    $entityManager->flush();
+
+                    $this->addFlash('success', 'Inscription à la sortie réussi! Amusez-vous bien!');
+                    return $this->render('main/home.html.twig');
+                }
+                else{
+                    $this->addFlash('warning', 'Erreur! Vous ne pouvez pas inscrire quelqu\'un d\'autre!');
+                    return $this->render('main/home.html.twig');
+                }
+            }
+
+        }catch (\Exception $e){
+            $this->addFlash('warning', $e->getMessage());
             return $this->render('main/home.html.twig');
+        }
+    }
+
+    /**
+     * @Route("/sortie/{idSortie}_{idParticipant}/sedesister", name="sortie_se_desister")
+     */
+    public function seDesisterSortie(int $idParticipant,int $idSortie, ParticipantRepository $participantRepository, EntityManagerInterface $entityManager): Response
+    {
+        try {
+            //récupération instance Participant et Sortie
+            $sorties = $entityManager->getRepository(Sortie::class)->find($idSortie);
+
+            if ($sorties->getParticipantInscrit()->count() <= 0){
+                $this->addFlash('warning', 'Aucun inscrit sur cette sortie');
+                return $this->render('main/home.html.twig');
+            }
+            else{
+                $participant = $participantRepository->find($idParticipant);
+                if ($this->getUser()->getUsername() == $participant->getUsername()) {
+                    //insert BDD (table: participant_sortie)
+                    $sorties->removeParticipantInscrit($participant);
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($participant);
+                    $entityManager->flush();
+
+                    $this->addFlash('success', 'Désistement validé ! ');
+                    return $this->render('main/home.html.twig');
+                }else{
+                    $this->addFlash('warning', 'Erreur! Vous ne pouvez pas désinscrire quelqu\'un d\'autre!');
+                    return $this->render('main/home.html.twig');
+                }
+            }
 
         }catch (\Exception $e){
             $this->addFlash('warning', $e->getMessage());

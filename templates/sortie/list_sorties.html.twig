@@ -48,7 +48,9 @@
                         <a href="#" title="Afficher sortie">Afficher</a> -
 
                         {% if inscritBool == true%}
-                            <a href="#" title="Se desister sortie">Se désister</a>
+                            <a href="{{ path('sortie_se_desister', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}" title="Se desister sortie">Se désister</a>
+                        {% elseif sortie.participantInscrit.count == sortie.nbInscriptionsMax%}
+                            <span id="complet">complet!</span>
                         {% else %}
                             <a href="{{ path('sortie_inscription', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}" title="S'incrire sortie">S'inscrire</a>
                         {% endif %}

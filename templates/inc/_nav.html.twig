@@ -4,7 +4,7 @@
 
     {% if app.user %}
 {#        <a href="{{ path('sortie_search') }}" title="Liste sorties">Liste des sorties</a>#}
-        <a href="{{ path('participant_details', {'id':app.user.id})}}" title="">Détails profil</a>
+        <a href="{{ path('participant_details', {'id':app.user.id})}}" title="">Mon profil</a>
         <a href="{{ path('app_logout') }}" title="Logout">Se déconnecter  ({{ app.user.username }})</a>
 
     {% else %}

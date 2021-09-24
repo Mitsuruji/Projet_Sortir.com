@@ -79,6 +79,11 @@ th{
     border: black 2px solid;
 }
 
+#complet{
+    color: red;
+    font-weight: bold;
+}
+
 /* ----------------------footer------------------- */
 footer{
     width: 100%;
