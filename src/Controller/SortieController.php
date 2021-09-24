@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Data\SearchOptions;
 use App\Entity\Sortie;
+use App\Form\AnnulerSortieType;
 use App\Form\SearchSortiesType;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
@@ -108,4 +109,52 @@ class SortieController extends AbstractController
             return $this->render('main/home.html.twig');
         }
     }
+
+    /**
+     * @Route("/sortie/{idSortie}/annulation", name="sortie_annulation")
+     */
+    public function annulerSortie(
+        int $idSortie,
+        SortieRepository $sortieRepository,
+        Request $request,
+        EntityManagerInterface $entityManager): Response
+    {
+        try {
+            //récupération instance Sortie
+            $sortie = $sortieRepository->find($idSortie);
+
+            if ($sortie->getMotifAnnulation() !== null){
+                $sortie->setMotifAnnulation(null);
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+            }
+
+            $form = $this->createForm(AnnulerSortieType::class, $sortie);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $etat = $entityManager->getReference('App:Etat','6');
+                $sortie->setEtat($etat);
+                $sortie->setMotifAnnulation($form->get('motifAnnulation')->getData());
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+
+                $nomSortie = $sortie->getNom();
+                $this->addFlash('success', "Sortie '$nomSortie' annulée!");
+
+                return $this->redirectToRoute('sortie_search');
+            }
+
+            return $this->render('sortie/annuler_sortie.html.twig', [
+                'sortieAnnulee' => $sortie,
+                'annuleeSortieForm' => $form->createView()
+            ]);
+
+        }catch (\Exception $e){
+            $this->addFlash('warning', $e->getMessage());
+            return $this->render('main/home.html.twig');
+        }
+    }
+
+
 }

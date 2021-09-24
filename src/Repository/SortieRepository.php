@@ -90,7 +90,7 @@ class SortieRepository extends ServiceEntityRepository
 
         if (!empty($searchOptions->getFilterDateMax())) {
             $queryBuilder = $queryBuilder
-                ->andWhere('s.dateLimiteInscription <= :filterDateMax')
+                ->andWhere('s.dateHeureDebut <= :filterDateMax')
                 ->setParameter('filterDateMax', $searchOptions->getFilterDateMax());
         }
 

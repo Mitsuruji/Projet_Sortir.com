@@ -12,6 +12,8 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class SearchSortiesType extends AbstractType
 {
@@ -30,7 +32,13 @@ class SearchSortiesType extends AbstractType
                 [
                 'label' => 'Le nom de la sortie contient: ',
                 'required' => false,
-                'attr' => ['placeholder' => 'Rechercher une sortie']
+                'attr' => ['placeholder' => '(50 caractères max)'],
+                'constraints' => [
+                    new Length([
+                        'max' => 50,
+                        'maxMessage' => 'Your nom should be less than {{ limit }} characters'
+                    ])
+                ]
                 ])
 
             ->add('filterDateMin', DateType::class,
