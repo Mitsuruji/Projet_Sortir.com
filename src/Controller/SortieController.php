@@ -20,7 +20,7 @@ class SortieController extends AbstractController
     /**
      * @Route("/", name="sortie_search")
      */
-    public function sortie(SortieRepository $sortieRepository, Request $request): Response
+    public function sortie(SortieRepository $sortieRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->getUser();
@@ -31,6 +31,14 @@ class SortieController extends AbstractController
         $form->handleRequest($request);
 
         $sorties = $sortieRepository->findSearch($data);
+
+
+        //cloture automatique des sorties suivant date
+        foreach ($sorties as $sortie) {
+            $this->clotureInscriptionSortie($sortie, $entityManager);
+        }
+
+
         return $this->render('sortie/list_sorties.html.twig', [
             'sorties' => $sorties,
             'searchSortiesForm' => $form->createView()
@@ -63,38 +71,46 @@ class SortieController extends AbstractController
     /**
      * @Route("/sortie/{idSortie}_{idParticipant}/inscription", name="sortie_inscription")
      */
-    public function inscriptionSortie(int $idParticipant,int $idSortie, ParticipantRepository $participantRepository, EntityManagerInterface $entityManager): Response
+    public function inscriptionSortie(int $idParticipant, int $idSortie, ParticipantRepository $participantRepository, EntityManagerInterface $entityManager): Response
     {
         try {
             //récupération instance Participant et Sortie
-            $sorties = $entityManager->getRepository(Sortie::class)->find($idSortie);
+            $sortie = $entityManager->getRepository(Sortie::class)->find($idSortie);
 
+            //init var date actuelle
+            $now = new \DateTime();
 
-            if ($sorties->getParticipantInscrit()->count() >= $sorties->getNbInscriptionsMax()){
-                $this->addFlash('warning', 'Sortie au complet, impossible de s\'inscrire!');
-                return $this->render('main/home.html.twig');
-            }
-            else{
-                $participant = $participantRepository->find($idParticipant);
-                if ($this->getUser()->getUsername() == $participant->getUsername()){
-                    //insert BDD (table: participant_sortie)
-                    $sorties->addParticipantInscrit($participant);
-                    $entityManager = $this->getDoctrine()->getManager();
-                    $entityManager->persist($participant);
-                    $entityManager->flush();
-
-                    $this->addFlash('success', 'Inscription à la sortie réussi! Amusez-vous bien!');
-                    return $this->render('main/home.html.twig');
+            //validation date de cloture
+            if ($now >= $sortie->getDateLimiteInscription() || $sortie->getEtat()->getId() == 3) {
+                if ($sortie->getEtat()->getId() != 3) {
+                    $this->clotureInscriptionSortie($sortie, $entityManager);
                 }
-                else{
-                    $this->addFlash('warning', 'Erreur! Vous ne pouvez pas inscrire quelqu\'un d\'autre!');
-                    return $this->render('main/home.html.twig');
+                $this->addFlash('warning', 'Inscription clôturée! Date limite d\'inscription atteinte! ');
+            } else {
+                //validation nombre de participant max
+                if ($sortie->getParticipantInscrit()->count() >= $sortie->getNbInscriptionsMax()) {
+                    $this->addFlash('warning', 'Inscription clôturée! Nombre de participant maximum atteint!');
+                } else {
+                    $participant = $participantRepository->find($idParticipant);
+                    //validation indentification user
+                    if ($this->getUser()->getUsername() == $participant->getUsername()) {
+                        //insert BDD (table: participant_sortie)
+                        $sortie->addParticipantInscrit($participant);
+                        $entityManager = $this->getDoctrine()->getManager();
+                        $entityManager->persist($participant);
+                        $entityManager->flush();
+
+                        $this->addFlash('success', 'Inscription à la sortie réussi! Amusez-vous bien!');
+                    } else {
+                        $this->addFlash('warning', 'Accès refusé! Vous ne pouvez pas inscrire quelqu\'un d\'autre!');
+                    }
                 }
             }
 
-        }catch (\Exception $e){
+            return $this->redirectToRoute('sortie_search');
+        } catch (\Exception $e) {
             $this->addFlash('warning', $e->getMessage());
-            return $this->render('main/home.html.twig');
+            return $this->redirectToRoute('sortie_search');
         }
     }
 
@@ -105,32 +121,30 @@ class SortieController extends AbstractController
     {
         try {
             //récupération instance Participant et Sortie
-            $sorties = $entityManager->getRepository(Sortie::class)->find($idSortie);
+            $sortie = $entityManager->getRepository(Sortie::class)->find($idSortie);
 
-            if ($sorties->getParticipantInscrit()->count() <= 0){
+            if ($sortie->getParticipantInscrit()->count() <= 0){
                 $this->addFlash('warning', 'Aucun inscrit sur cette sortie');
-                return $this->render('main/home.html.twig');
             }
             else{
                 $participant = $participantRepository->find($idParticipant);
                 if ($this->getUser()->getUsername() == $participant->getUsername()) {
                     //insert BDD (table: participant_sortie)
-                    $sorties->removeParticipantInscrit($participant);
+                    $sortie->removeParticipantInscrit($participant);
                     $entityManager = $this->getDoctrine()->getManager();
                     $entityManager->persist($participant);
                     $entityManager->flush();
 
-                    $this->addFlash('success', 'Désistement validé ! ');
-                    return $this->render('main/home.html.twig');
+                    $this->addFlash('success', 'Désistement validé! ');
                 }else{
-                    $this->addFlash('warning', 'Erreur! Vous ne pouvez pas désinscrire quelqu\'un d\'autre!');
-                    return $this->render('main/home.html.twig');
+                    $this->addFlash('warning', 'Accès refusé! Vous ne pouvez pas désinscrire quelqu\'un d\'autre!');
                 }
             }
+            return $this->redirectToRoute('sortie_search');
 
         }catch (\Exception $e){
             $this->addFlash('warning', $e->getMessage());
-            return $this->render('main/home.html.twig');
+            return $this->redirectToRoute('sortie_search');
         }
     }
 
@@ -181,4 +195,20 @@ class SortieController extends AbstractController
     }
 
 
+    private function clotureInscriptionSortie(Sortie $sortie, EntityManagerInterface $entityManager):void{
+        //init var date actuelle
+        $now = new \DateTime();
+        //recherche date clôture et changement d'état si date atteinte
+        if ($now >= $sortie->getDateLimiteInscription() && $sortie->getEtat()->getId()!=3){
+
+            //mise à jour BDD
+            $etat = $entityManager->getReference('App:Etat','3');
+            $sortie->setEtat($etat);
+
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+        }
+    }
+
 }
+

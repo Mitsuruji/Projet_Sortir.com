@@ -40,26 +40,29 @@
                         {% endif %}
                     {% endfor %}
                 </td>
-                <td>{{ sortie.participantOrganisateur.username }}</td>
+                <td><a href="{{ path('participant_details', {'id': sortie.participantOrganisateur.id}) }}">{{ sortie.participantOrganisateur.username }}</a></td>
                 <td>
                     {% if app.user.username == sortie.participantOrganisateur.username %}
-                        <a href="#" title="Modifier sortie">Modifier</a>
-
                         {% if sortie.etat.id != '6' and sortie.etat.id != '5' %}
-                        - <a href="{{ path('sortie_annulation', {'idSortie': sortie.id}) }}" title="Annuler sortie">Annuler</a>
+                            <a href="#" title="Modifier sortie">Modifier</a>
+                            - <a href="{{ path('sortie_annulation', {'idSortie': sortie.id}) }}" title="Annuler sortie">Annuler</a>
                         {% endif %}
-
                     {% else%}
-                        <a href="#" title="Afficher sortie">Afficher</a> -
+                        <a href="#" title="Afficher sortie">Afficher</a>
+                    {% endif %}
 
-                        {% if inscritBool == true%}
-                            <a href="{{ path('sortie_se_desister', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}" title="Se desister sortie">Se désister</a>
-                        {% elseif sortie.participantInscrit.count == sortie.nbInscriptionsMax%}
-                            <span id="complet">complet!</span>
-                        {% else %}
-                            <a href="{{ path('sortie_inscription', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}" title="S'incrire sortie">S'inscrire</a>
-                        {% endif %}
+                    {% if inscritBool == true%}
+                        - <a href="{{ path('sortie_se_desister', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}" title="Se desister sortie">Se désister</a>
 
+                        {# debug elseif #}
+                        <br>
+                        participantInscrit: {{ sortie.participantInscrit.count }}<br>
+                        nbInscriptionsMax:{{ sortie.nbInscriptionsMax }}<br>
+                        {# debug elseif comparateur nombre inscrits '==' ne fonctionne pas dans le elseif#}{# comparateur état fonctionne #}
+                    {% elseif sortie.participantInscrit.count == sortie.nbInscriptionsMax or sortie.etat.id == 3%}
+                        - <span id="sortieFermée">Fermée!</span>
+                    {% else %}
+                        - <a href="{{ path('sortie_inscription', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}" title="S'incrire sortie">S'inscrire</a>
                     {% endif %}
                 </td>
             </tr>
