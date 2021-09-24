@@ -56,6 +56,7 @@ class LieuSortieFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Lieu::class,
+            'method'=> 'POST',
         ]);
     }
 }

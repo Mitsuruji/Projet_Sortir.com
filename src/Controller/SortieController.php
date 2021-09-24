@@ -45,6 +45,9 @@ class SortieController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/create/sortieForm", name="create_sortieForm")
+     */
     public function createSortieForm(Request $request, EntityManagerInterface $entityManager): Response
     {
         $sortie =new Sortie();

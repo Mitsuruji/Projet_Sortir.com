@@ -12,7 +12,7 @@
         {{ form_row(sortieForm.duree) }}
         {{ form_row(sortieForm.sortieLieu) }}
         <div>
-            <input type="button" value="Ajouter un nouveau lieu">
+            <input type="button" value="Ajouter un nouveau lieu" onclick="{{ path('/') }}">
         </div>
         {{ form_row(sortieForm.nbInscriptionsMax) }}
         {{ form_row(sortieForm.infosSortie) }}
