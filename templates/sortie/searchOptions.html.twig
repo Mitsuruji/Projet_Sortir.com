@@ -1,5 +1,7 @@
-{{ form_start(searchSortiesForm) }}
-<h4>Filtrer les sorties</h4>
+
+<div class="form-listSerie1">
+    <h4 style="display: inline-block">Filtrer les sorties</h4>
+    {{ form_start(searchSortiesForm) }}
 
     {{ form_row(searchSortiesForm.choixCampus) }}
 
@@ -8,15 +10,13 @@
     {{ form_row(searchSortiesForm.filterDateMin) }}
 
     {{ form_row(searchSortiesForm.filterDateMax) }}
-
-
-
-
-    {{ form_row(searchSortiesForm.filterIsOrganisateur) }}
-    {{ form_row(searchSortiesForm.filterIsInscris) }}
-    {{ form_row(searchSortiesForm.filterIsPasInscris) }}
-    {{ form_row(searchSortiesForm.filterSortiesPassees) }}
-
+</div>
+<div class="form-listSerie2">
+    <div>{{ form_widget(searchSortiesForm.filterIsOrganisateur) }}{{ form_label(searchSortiesForm.filterIsOrganisateur) }}</div>
+    <div>{{ form_widget(searchSortiesForm.filterIsInscris) }}{{ form_label(searchSortiesForm.filterIsInscris) }}</div>
+    <div>{{ form_widget(searchSortiesForm.filterIsPasInscris) }}{{ form_label(searchSortiesForm.filterIsPasInscris) }}</div>
+    <div>{{ form_widget(searchSortiesForm.filterSortiesPassees) }}{{ form_label(searchSortiesForm.filterSortiesPassees) }}</div>
+</div>
 
 <button type="submit" class="btn">Rechercher</button>
-{{ form_end(searchSortiesForm) }}
+    {{ form_end(searchSortiesForm) }}

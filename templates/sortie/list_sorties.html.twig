@@ -4,11 +4,11 @@
 
 {% block body %}
     <div>
-        <h3 style="text-align: right">Date du jour : {{ "now"|date("d/m/Y") }}<br>
+        <h3 style="float: right">Date du jour : {{ "now"|date("d/m/Y") }}<br>
             Participant : {{ app.user.username }}
         </h3>
     </div>
-    <div style="display: flex">
+    <div class="form-listSerie">
         {% include 'sortie/searchOptions.html.twig' with {searchSortiesForm:searchSortiesForm} only%}
     </div>
    <table>
@@ -48,10 +48,12 @@
                             - <a href="{{ path('sortie_annulation', {'idSortie': sortie.id}) }}" title="Annuler sortie">Annuler</a>
                         {% endif %}
                     {% else%}
-                        <a href="#" title="Afficher sortie">Afficher</a>
+                        {% if sortie.etat.id != '5' %}
+                        <a href="{{ path('sortie_detail', {'idSortie': sortie.id}) }}" title="Afficher sortie">Afficher</a>
+                        {% endif %}
                     {% endif %}
 
-                    {% if inscritBool == true%}
+                    {% if inscritBool == true and (sortie.etat.id != '5' and sortie.etat.id != '6') %}
                         - <a href="{{ path('sortie_se_desister', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}" title="Se desister sortie">Se désister</a>
 
                         {# debug elseif #}
@@ -61,8 +63,10 @@
                         {# debug elseif comparateur nombre inscrits '==' ne fonctionne pas dans le elseif#}{# comparateur état fonctionne #}
                     {% elseif sortie.participantInscrit.count == sortie.nbInscriptionsMax or sortie.etat.id == 3%}
                         - <span id="sortieFermée">Fermée!</span>
-                    {% else %}
+                    {% elseif sortie.etat.id != '5' and sortie.etat.id != '6' %}
                         - <a href="{{ path('sortie_inscription', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}" title="S'incrire sortie">S'inscrire</a>
+                    {% else %}
+                        -
                     {% endif %}
                 </td>
             </tr>

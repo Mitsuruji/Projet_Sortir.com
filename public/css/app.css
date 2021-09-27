@@ -1,13 +1,23 @@
 
 /* -----------------------header------------------ */
+* {
+    box-sizing: border-box;
+}
 header,
 footer{
     padding-top: 0.5em;
+    padding-bottom: 1rem;
     padding-left: 5%;
-    background:linear-gradient(lightsteelblue,#5eb5e0);
+
 }
 
+header{
+    background:linear-gradient(#5eb5e0,#043773);
+}
 
+footer{
+    background:linear-gradient(#043773,#5eb5e0);
+}
 /* ----------------------nav---------------------- */
 nav a{
 
@@ -25,8 +35,10 @@ nav{
 
 /* ----------------------body------------------- */
 body{
-    background: linear-gradient(#f5f5f5, #d3d1d1);
+    background: linear-gradient(#84c1ec, #fff4e7, #84c1ec);
+    background-position: 50% 100%;
     background-attachment: fixed;
+    margin: 0;
 
 }
 
@@ -54,15 +66,47 @@ main{
 
 /* formulaire*/
 form{
-    display: grid;
-    max-width: 100px;
-    box-sizing: border-box;
+    display: block;
+    max-width: 40%;
+    /*box-sizing: border-box;*/
 }
+
+.form-listSerie{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.form-listSerie1 {
+    display: flex;
+    flex-flow: column;
+    max-width: 40%;
+    padding: 0 5%;
+}
+
+.form-listSerie2 {
+    display: flex;
+    flex-flow: column wrap;
+    max-width: 40%;
+    padding: 0 5%;
+}
+
+.form-listSerie2 div{
+    padding: 0;
+}
+
+.form-listSerie button{
+    align-items: flex-end;
+    padding: 15px;
+}
+
 input,
 select,
 button,
 table{
     margin-bottom: 1em;
+    max-width: 200px;
 }
 
 table,
@@ -84,6 +128,45 @@ th{
     font-weight: bold;
 }
 
+.detailSortieMain{
+    display: flex;
+    flex-flow: wrap;
+    align-content: center;
+    justify-content: center;
+}
+
+.detailSortieTitle{
+    text-align: center;
+    order: 1;
+    width: 100%;
+}
+
+.detailSortieBloc1{
+    display: grid;
+    order: 2;
+    width: 45%;
+    padding-right: 2%;
+    justify-content: flex-end;
+}
+
+.detailSortieBloc2{
+    display: grid;
+    order: 3;
+    width: 45%;
+    padding-left: 10%;
+    justify-content: flex-start;
+}
+
+.detailSortieBloc1 div, .detailSortieBloc2 div{
+    margin-bottom: 0.5rem;
+}
+
+.detailSortieTableau{
+    justify-content: center;
+    display: grid;
+    order: 4;
+    width: 50%;
+}
 /* ----------------------footer------------------- */
 footer{
     width: 100%;

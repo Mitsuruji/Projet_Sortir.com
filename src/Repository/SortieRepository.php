@@ -7,8 +7,6 @@ use App\Entity\Sortie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Sortie|null find($id, $lockMode = null, $lockVersion = null)
@@ -33,7 +31,7 @@ class SortieRepository extends ServiceEntityRepository
             ->createQueryBuilder('s')
             ->join('s.etat','etat')
             ->addSelect('etat')
-            ->join('s.participantInscrit','insc')
+            ->leftjoin('s.participantInscrit','insc')
             ->addSelect('insc')
             ->join('s.participantOrganisateur','orga')
             ->addSelect('orga')
@@ -49,7 +47,7 @@ class SortieRepository extends ServiceEntityRepository
 //        }
         if (!empty($searchOptions->getFilterIsOrganisateur())) {
             $queryBuilder = $queryBuilder
-                ->andWhere('orga.id LIKE :currentUser') /* OR insc.id != :currentUser')*/
+                ->andWhere('orga.id LIKE :currentUser')
                 ->setParameter('currentUser', $searchOptions->getCurrentUser());
         }
 
