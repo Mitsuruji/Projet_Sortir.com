@@ -64,6 +64,35 @@ class SortieController extends AbstractController
         ]);
     }
 
+    /*
+ * @Route("/create/sortieForm", name="create_sortieForm")
+ */
+    /*  en attente correction laurent
+         public function createSortieForm(Request $request, EntityManagerInterface $entityManager): Response
+           {
+               $sortie =new Sortie();
+               $sortie->setDateCreated(new \DateTime());
+               $sortieForm= $this->createForm(SortieFormType::class, $sortie);
+
+               $sortieForm->handleRequest($request);
+
+
+               if($sortieForm->isSubmitted() && $sortieForm->isValid()){
+                   $entityManager->persist($sortie);
+                   $entityManager->flush();
+
+                   $this->addFlash('succes', 'La sortie a bien été créé');
+                   return $this->redirectToRoute('sortie_search');
+               }
+
+               return $this->render('sortie/create.html.twig', [
+                   'sortieForm'=>   $sortieForm->createView()
+
+               ]);
+           }
+    */
+
+
     /**
      * @Route("/detailSortie/{idSortie}", name="sortie_detail")
      */
@@ -72,13 +101,11 @@ class SortieController extends AbstractController
                            EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
         try {
             $sortie = $sortieRepository->find($idSortie);
             if ($sortie->getEtat()->getId() == '5') {
                 throw $this->createAccessDeniedException('Cette sortie est archivée, vous n\'êtes pas authorisé à accéder à cette page!');
             }
-
             return $this->render('sortie/details.html.twig', [
                 'sortie' => $sortie
             ]);
