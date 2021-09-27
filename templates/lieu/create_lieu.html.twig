@@ -10,11 +10,11 @@
         {{ form_row(lieuSortieForm.nom) }}
         {{ form_row(lieuSortieForm.rue) }}
         {{ form_row(lieuSortieForm.lieuVille) }}
-        {{ form_row(lieuSortieForm.lattitude) }}
+        {{ form_row(lieuSortieForm.latitude) }}
         {{ form_row(lieuSortieForm.longitude) }}
-
         <div>
             <input type="submit" value="Enregistrer le nouveau lieu" >
         </div>
+        {{ form_end(lieuSortieForm) }}
     </div>
 {% endblock %}

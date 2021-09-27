@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Lieu;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -16,38 +17,42 @@ class LieuSortieFormType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class, [
-                'label'=>'Nom du lieu de la sortie',
-                'constraints'=>[
+                'label'=>'Nom du lieu',
+                /*'constraints'=>[
                     new NotBlank([
                         'message'=>'Merci de choisir un nom pour le lieu'
                     ])
-                ]
+                ]*/
             ])
 
-            ->add('rue', TextareaType::class, [
+            ->add('rue', TextType::class, [
                 'label'=>'Rue',
-                'constraints'=>[
+                /*'constraints'=>[
                     new NotBlank([
                         'message'=>"Merci d'indiquer la rue"
                     ])
-                ]
+                ]*/
             ])
 
             ->add('latitude', IntegerType::class, [
-                'label'=>'Latitude',
+                'label'=>'latitude',
+                'required' => false,
             ])
 
             ->add('longitude', IntegerType::class, [
                 'label'=>'longitude',
+                'required' => false,
             ])
 
-            ->add('lieuVille', TextType::class, [
+            ->add('lieuVille', EntityType::class, [
                 'label'=>'Ville',
-                'constraints'=>[
+                'class'=>Lieu::class,
+                'choice_label'=>''
+                /*'constraints'=>[
                     new NotBlank([
                         'message'=>"Merci d'indiquer la ville"
                     ])
-                ]
+                ]*/
             ])
         ;
     }

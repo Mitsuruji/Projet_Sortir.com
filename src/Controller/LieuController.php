@@ -14,26 +14,28 @@ use Symfony\Component\Routing\Annotation\Route;
 class LieuController extends AbstractController
 {
     /**
-     * @Route("/Lieu", name="lieu_search")
+     * @Route("/create/Lieu", name="lieu_create")
      */
-   /* en attente correction Laurent
-
-     public function lieuSortieForm(LieuRepository $lieuRepository, Request $request): Response
+    public function lieuSortieForm(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $lieu = $this->getLieuSortie();
-        $data = new SearchOptions();
-        $data->setCurrentLieu($lieu);
+        $lieu =new Lieu();
+        $lieuSortieForm= $this->createForm(LieuSortieFormType::class, $lieu);
 
-        $form = $this->createForm(LieuSortieFormType::class, $data);
-        $form->handleRequest($request);
+        $lieuSortieForm->handleRequest($request);
 
-        $lieux = $lieuRepository->findSearch($data);
-        return $this->render('lieu/list_lieux.html.twig', [
-            'lieux' => $lieux,
-            'lieuSortieForm' => $form->createView()
+
+        if($lieuSortieForm->isSubmitted() && $lieuSortieForm->isValid()){
+            $entityManager->persist($lieu);
+            $entityManager->flush();
+
+            $this->addFlash('succes', 'Le lieu a bien été créé');
+            return $this->render('sortie/create.html.twig');
+        }
+
+        return $this->render('lieu/create_lieu.html.twig', [
+            'lieuSortieForm'=>   $lieuSortieForm->createView()
+
         ]);
     }
-   */
 
 }

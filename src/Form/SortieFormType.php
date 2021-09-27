@@ -38,6 +38,7 @@ class SortieFormType extends AbstractType
 
             ->add('dateHeureDebut', DateTimeType::class, [
                 'label'=>'Date de la sortie',
+                'widget' => 'single_text',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Merci de renseigner une date valide',
@@ -47,11 +48,13 @@ class SortieFormType extends AbstractType
 
             ->add('duree', TimeType::class, [
                 'label'=>'Durée de la sortie',
-                'required'=>'false',
+                'required'=>false,
+                'widget' => 'single_text',
             ])
 
             ->add('dateLimiteInscription', DateTimeType::class, [
                 'label'=>"Date limite pour s'inscrire à la sortie",
+                'widget' => 'single_text',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Merci de renseigner une date valide',
@@ -70,12 +73,13 @@ class SortieFormType extends AbstractType
 
             ->add('infosSortie', TextareaType::class, [
                 'label'=>'Informations complémentaires sur la sortie',
-                'required'=>'false',
+                'required'=>false,
             ])
 
             ->add('sortieLieu', EntityType::class, [
                 'label'=>'Lieu de la sortie',
                 'class'=>Lieu::class,
+                'choice_label'=>'nom',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Merci de choisir un lieu',

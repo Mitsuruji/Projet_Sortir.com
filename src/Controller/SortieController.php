@@ -78,33 +78,30 @@ class SortieController extends AbstractController
         ]);
     }
 
-    /*
- * @Route("/create/sortieForm", name="create_sortieForm")
- */
-    /*  en attente correction laurent
-         public function createSortieForm(Request $request, EntityManagerInterface $entityManager): Response
-           {
-               $sortie =new Sortie();
-               $sortie->setDateCreated(new \DateTime());
-               $sortieForm= $this->createForm(SortieFormType::class, $sortie);
+    /**
+     * @Route("/create/sortieForm", name="create_sortieForm")
+     */
+    public function createSortieForm(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $sortie =new Sortie();
+        $sortieForm= $this->createForm(SortieFormType::class, $sortie);
 
-               $sortieForm->handleRequest($request);
+        $sortieForm->handleRequest($request);
 
 
-               if($sortieForm->isSubmitted() && $sortieForm->isValid()){
-                   $entityManager->persist($sortie);
-                   $entityManager->flush();
+        if($sortieForm->isSubmitted() && $sortieForm->isValid()){
+            $entityManager->persist($sortie);
+            $entityManager->flush();
 
-                   $this->addFlash('succes', 'La sortie a bien été créé');
-                   return $this->redirectToRoute('sortie_search');
-               }
+            $this->addFlash('succes', 'La sortie a bien été créé');
+            return $this->redirectToRoute('sortie_search');
+        }
 
-               return $this->render('sortie/create.html.twig', [
-                   'sortieForm'=>   $sortieForm->createView()
+        return $this->render('sortie/create.html.twig', [
+            'sortieForm'=>   $sortieForm->createView()
 
-               ]);
-           }
-    */
+        ]);
+    }
 
 
     /**

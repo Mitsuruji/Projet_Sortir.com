@@ -5,11 +5,12 @@
     {% if app.user %}
 {#        <a href="{{ path('sortie_search') }}" title="Liste sorties">Liste des sorties</a>#}
         <a href="{{ path('participant_details', {'id':app.user.id})}}" title="">Mon profil</a>
+        <a href="{{ path('create_sortieForm') }}" title="Créer une sortie sortie">Créer une nouvelle sortie</a>
         <a href="{{ path('app_logout') }}" title="Logout">Se déconnecter  ({{ app.user.username }})</a>
 
     {% else %}
         <a href="{{ path('app_login') }}" title="Login">Se connecter</a>
-        <a href="{{ path('app_register') }}" title="Register">S'enregistrer</a>
+        <a href="{{ path('app_register') }}" title="Register">S'inscrire</a>
 
     {% endif %}
 </nav>
