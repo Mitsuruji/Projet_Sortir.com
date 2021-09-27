@@ -49,13 +49,27 @@ class SortieController extends AbstractController
                $entityManager->flush();
            }
            if (($sortie->getEtat()->getId() !== 1 or $sortie->getEtat()->getId() !== 5) &&
-                $now > date_add($sortie->getDateHeureDebut(), date_interval_create_from_date_string("30 days")))
+                $now > date_create_immutable(date_format($sortie->getDateHeureDebut(),'Y-m-d H:i:s'))
+                    ->add(date_interval_create_from_date_string("30 days")))
            {
                $etatArchive = $entityManager->getReference('App:Etat','5');
                $sortie->setEtat($etatArchive);
                $entityManager->persist($sortie);
                $entityManager->flush();
            }
+
+           if (($sortie->getEtat()->getId() === 2 or $sortie->getEtat()->getId() === 4) &&
+               date_timestamp_get($now) > $datedebut=date_timestamp_get($sortie->getDateHeureDebut())
+                + date_timestamp_get($sortie->getDuree()) +
+                   timezone_offset_get(date_timezone_get($sortie->getDuree()),$sortie->getDuree()))
+           {
+               $etatTermine = $entityManager->getReference('App:Etat','5');
+               $sortie->setEtat($etatTermine);
+               $entityManager->persist($sortie);
+               $entityManager->flush();
+
+           }
+
         }
 
         return $this->render('sortie/list_sorties.html.twig', [

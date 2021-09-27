@@ -29,8 +29,8 @@
             {% set inscritBool = false %}
             <tr>
                 <td>{{ sortie.nom }}</td>
-                <td>{{ sortie.dateHeureDebut|date("d/m/y H:i") }}</td>
-                <td>{{ sortie.dateLimiteInscription|date("d/m/y H:i") }}</td>
+                <td>{{ sortie.dateHeureDebut|date("d/m/Y H:i") }}</td>
+                <td>{{ sortie.dateLimiteInscription|date("d/m/Y H:i") }}</td>
                 <td>{{ sortie.participantInscrit.count }} / {{ sortie.nbInscriptionsMax }}</td>
                 <td>{{ sortie.etat.libelle }}</td>
                 <td>{% for inscrit in sortie.participantInscrit %}
