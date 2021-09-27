@@ -85,6 +85,11 @@ class Participant implements UserInterface
      */
     private $sortiesParticipations;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $photo;
+
     public function __construct()
     {
         $this->sortiesOrganisees = new ArrayCollection();
@@ -301,6 +306,18 @@ class Participant implements UserInterface
     public function removeSortiesParticipation(Sortie $sortiesParticipation): self
     {
         $this->sortiesParticipations->removeElement($sortiesParticipation);
+
+        return $this;
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(?string $photo): self
+    {
+        $this->photo = $photo;
 
         return $this;
     }

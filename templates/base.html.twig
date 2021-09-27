@@ -7,17 +7,27 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% block title%}Sortir.com!{% endblock %}</title>
 
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU"
+          crossorigin="anonymous">
     {# google font#}
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Birthstone&display=swap" rel="stylesheet">
     {# css#}
     <link rel="stylesheet" href="{{ asset('css/app.css') }}" type="text/css">
     {# favicon#}
-    <!-- <link rel="icon" href="{{ asset('img/favicon.png') }}"> -->
+    <link rel="icon" href="{{ asset('img/logo_sortir.jpg') }}">
 </head>
 
 <body>
 <header>
-    <h1>Sortir.com!</h1>
+    <h1 id="titre">
+        <span id="titre">Sortir.com!</span>
+        <img src="{{ asset('img/logo_sortir.jpg') }}" id="logo" title="Logo sortir">
+    </h1>
     {% include 'inc/_nav.html.twig' %}
 </header>
 
@@ -35,7 +45,7 @@
 </main>
 
 <footer>
-    <p>© Sortir.com! - {{ "now"|date("Y")}} </p>
+    <p>© <span id="titre">Sortir.com!</span> <img src="{{ asset('img/logo_sortir.jpg') }}" id="logofooter" title="Logo sortir"> - {{ "now"|date("Y")}} </p>
 </footer>
 </body>
 </html>

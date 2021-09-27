@@ -9,14 +9,16 @@
         {{ form_start(registrationForm) }}
 
         {{ form_widget(registrationForm) }}
-        <button type="submit" class="btn">Update</button>
+        <button type="submit" class="btn btn-success">Update</button>
 
         {{ form_end(registrationForm) }}
-        <a href="{{ path('participant_updatePassword',{'id':participant.id}) }}"><button>Modifier mot de passe</button></a> <br/>
-        <a href="{{ path('participant_details', {'id':participant.id}) }}"><button>Retour</button></a>
-    {% else %}
+        <div>
+            <a href="{{ path('participant_updatePassword',{'id':participant.id}) }}"><button class="btn btn-primary">Modifier mot de passe</button></a>
+            <a href="{{ path('participant_details', {'id':participant.id}) }}"><button class="btn btn-info">Retour</button></a>
+        </div>
+        {% else %}
         <h2>Erreur de navigation</h2>
-        <a href="{{ path('sortie_search')}}"><button>Retour</button></a>
+            <a href="{{ path('sortie_search') }}"><button class="btn btn-info">Retour</button></a>
     {% endif %}
 
 {% endblock %}

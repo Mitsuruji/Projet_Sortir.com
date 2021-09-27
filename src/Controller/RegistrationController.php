@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Validator\Constraints\Image;
 
 class RegistrationController extends AbstractController
 {
@@ -35,6 +36,19 @@ class RegistrationController extends AbstractController
                 )
             );
 
+            //gestion image
+            $photo = $form->get('photo')->getData();
+            if ($photo){
+                //genere un nouveau nom de fichier
+                $fichier = md5(uniqid()).'.'.$photo->guessExtension();
+
+                //copie de la photo dans le dossier uploads
+                $photo->move($this->getParameter('images_directory'), $fichier);
+
+                //envoie du nom de fichier dans la BDD
+                $user->setPhoto($fichier);
+            }
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
@@ -42,7 +56,7 @@ class RegistrationController extends AbstractController
 
 
             $this->addFlash('success', 'Enregistrement validé ! Bienvenue !');
-            return $this->redirectToRoute('main_home');
+            return $this->redirectToRoute('sortie_search');
         }
 
         if ($form->isSubmitted() && !$form->isValid()){

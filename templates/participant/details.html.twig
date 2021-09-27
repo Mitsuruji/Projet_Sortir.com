@@ -3,55 +3,59 @@
 {% block title %}Mon profil | {{ parent() }}{% endblock %}
 
 {% block body %}
-    {% if app.user.id == participant.id %}
-    <h2>Mon profil:</h2>
-    {% else %}
-    <h2>{{ participant.username }}</h2>
-    {% endif %}
-
-    <div id="infosParticipant">
-        <table>
-            <tbody>
-            <tr>
-                <td>Nom: </td>
-                <td>{{ participant.nom }}</td>
-            </tr>
-            <tr>
-                <td>Prenom: </td>
-                <td>{{ participant.prenom }}</td>
-            </tr>
-            {% if app.user.id == participant.id %}
-                <tr>
-                    <td>Pseudo:</td>
-                    <td>{{ participant.username }}</td>
-                </tr>
+    <div id="container">
+        <div id="imgParticipant">
+            {% if participant.photo %}
+                <img src="{{ asset('uploads/' ~ participant.photo) }}">
             {% endif %}
-            <tr>
-                <td>Telephone:</td>
-                <td>{{ participant.telephone }}</td>
-            </tr>
-            <tr>
-                <td>Email:</td>
-                <td>{{ participant.mail}}</td>
-            </tr>
-            <tr>
-                <td>Campus:</td>
-                <td>{{ participant.campus.nom}}</td>
-            </tr>
-            <tr>
-                <td>Ma photo:</td>
-                <td>TODO: upload img</td>
-            </tr>
-            </tbody>
-        </table>
-        {% if app.user.id == participant.id %}
-            <a href="{{ path('participant_update', {'id':participant.id}) }}"><button>Modifier mes infos</button></a>
-            <a href="{{ path('sortie_search') }}"><button>Retour</button></a>
-        {% else %}
-            <a href="{{ path('sortie_search') }}"><button>Retour</button></a>
-        {% endif %}
-
+        </div>
+        <div id="detailsParticipant">
+            {% if app.user.id == participant.id %}
+            <h2>Mon profil:</h2>
+            {% else %}
+            <h2>{{ participant.username }}</h2>
+            {% endif %}
+            <div id="infosParticipant">
+                <table id="tableInfos">
+                    <tbody>
+                    <tr>
+                        <td>Nom: </td>
+                        <td>{{ participant.nom }}</td>
+                    </tr>
+                    <tr>
+                        <td>Prenom: </td>
+                        <td>{{ participant.prenom }}</td>
+                    </tr>
+                    {% if app.user.id == participant.id %}
+                        <tr>
+                            <td>Pseudo:</td>
+                            <td>{{ participant.username }}</td>
+                        </tr>
+                    {% endif %}
+                    <tr>
+                        <td>Telephone:</td>
+                        <td>{{ participant.telephone }}</td>
+                    </tr>
+                    <tr>
+                        <td>Email:</td>
+                        <td>{{ participant.mail}}</td>
+                    </tr>
+                    <tr>
+                        <td>Campus:</td>
+                        <td>{{ participant.campus.nom}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                {% if app.user.id == participant.id %}
+                    <a href="{{ path('participant_update', {'id':participant.id}) }}">
+                        <button class="btn btn-primary">Modifier mes infos</button>
+                    </a>
+                    <a href="{{ path('sortie_search') }}"><button class="btn btn-info">Retour</button></a>
+                {% else %}
+                    <a href="{{ path('sortie_search') }}"><button class="btn btn-info">Retour</button></a>
+                {% endif %}
+            </div>
+        </div>
     </div>
-
 
 {% endblock %}

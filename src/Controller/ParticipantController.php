@@ -50,8 +50,29 @@ class ParticipantController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $entityManager = $this->getDoctrine()->getManager();
+
+            //gestion image
+            $photo = $form->get('photo')->getData();
+            if ($photo){
+
+                //suppression de l'ancienne photo
+                $nomphoto = $participant->getPhoto();
+                if ($nomphoto){
+                    unlink($this->getParameter('images_directory').'/'.$nomphoto);
+                }
+
+
+                //genere un nouveau nom de fichier
+                $fichier = md5(uniqid()).'.'.$photo->guessExtension();
+
+                //copie de la photo dans le dossier uploads
+                $photo->move($this->getParameter('images_directory'), $fichier);
+
+                //envoie du nom de fichier dans la BDD
+                $participant->setPhoto($fichier);
+            }
+
             $entityManager->persist($participant);
             $entityManager->flush();
 
