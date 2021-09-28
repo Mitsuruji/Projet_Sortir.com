@@ -42,7 +42,7 @@ class RegistrationController extends AbstractController
 
 
             $this->addFlash('success', 'Enregistrement validé ! Bienvenue !');
-            return $this->redirectToRoute('main_home');
+            return $this->redirectToRoute('sortie_search');
         }
 
         if ($form->isSubmitted() && !$form->isValid()){

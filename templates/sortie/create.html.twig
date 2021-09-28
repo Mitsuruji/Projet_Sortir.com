@@ -12,6 +12,12 @@
         {{ form_row(sortieForm.dateHeureDebut) }}
         {{ form_row(sortieForm.duree) }}
         {{ form_row(sortieForm.sortieLieu) }}
+        <div>
+            {#{{ sortieForm.sortieLieu.rue }},
+            {{ sortie.sortieLieu.lieuVille.nom }}
+            {{ sortie.sortieLieu.latitude }}
+            {{ sortie.sortieLieu.longitude }} #}
+        </div>
         {{ form_row(sortieForm.nbInscriptionsMax) }}
         {{ form_row(sortieForm.infosSortie) }}
         <div>
@@ -19,29 +25,6 @@
         </div>
         {{ form_end(sortieForm) }}
 
-        <div>
-            {% if app.sortie== new Sortie() %}
-                <a href="#" title="Afficher la sortie">Modifier</a>
-            {#{% else%}
-                <a href="#" title="Afficher sortie">Afficher</a> -
-
-                {% if new Sortie() == true %}
-                    <a href="{{ path('#', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}" title="Se desister sortie">Se desister</a>
-                    ("/sortie/{idSortie}_{idParticipant}/sedesister", name="sortie_se_desister")
-                    <a href="{{ path('#', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}" title="Motif d'annulation">Motif d'annulation</a>
-                    motif_annulation,
-                    ("/sortie/{idSortie}/annulation", name="sortie_annulation")
-                    etat_id,
-                    sortie_lieu_id,
-                    participant_organisateur_id,
-                    campus_organisateur_id
-
-                {% else %}
-                    <a href="{{ path('sortie_inscription', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}" title="S'incrire à une sortie">S'inscrire</a>
-                {% endif %}#}
-
-            {% endif %}
-        </div>
 
         {# Pour plus tard<div>
             <a href="{{ path('lieu_search') }}">

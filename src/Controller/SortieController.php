@@ -83,10 +83,18 @@ class SortieController extends AbstractController
      */
     public function createSortieForm(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->getUser()->getId();
         $sortie =new Sortie();
         $sortieForm= $this->createForm(SortieFormType::class, $sortie);
 
         $sortieForm->handleRequest($request);
+
+        $participantActuelle = $entityManager->getReference('App:Participant',$user);
+        $sortie->setParticipantOrganisateur($participantActuelle);
+
+        $campusActuelle = $participantActuelle->getCampus();
+        $sortie->setCampusOrganisateur($campusActuelle);
 
 
         if($sortieForm->isSubmitted() && $sortieForm->isValid()){
@@ -98,7 +106,8 @@ class SortieController extends AbstractController
         }
 
         return $this->render('sortie/create.html.twig', [
-            'sortieForm'=>   $sortieForm->createView()
+            'sortieForm'=>   $sortieForm->createView(),
+            'sortie'=> $sortie
 
         ]);
     }
