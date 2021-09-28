@@ -1,4 +1,7 @@
-
+* {
+    margin: 0;
+    padding: 0;
+}
 /* -----------------------header------------------ */
 * {
     box-sizing: border-box;
@@ -14,10 +17,19 @@ footer{
 header{
     background:linear-gradient(#5eb5e0,#043773);
 }
-
-footer{
-    background:linear-gradient(#043773,#5eb5e0);
+header h1{
+    font-size: 5em;
 }
+#logo{
+    max-height: 80px;
+    margin-left: 0.3em;
+}
+#titre{
+    color: #f36f3a;
+    font-family: 'Birthstone', cursive;
+    font-weight: bold;
+}
+
 /* ----------------------nav---------------------- */
 nav a{
 
@@ -38,13 +50,14 @@ body{
     background: linear-gradient(#84c1ec, #fff4e7, #84c1ec);
     background-position: 50% 100%;
     background-attachment: fixed;
-    margin: 0;
+
 
 }
 
 main{
     display: grid;
     justify-content: center;
+    margin-bottom: 5em;
 }
 
 
@@ -69,6 +82,9 @@ form{
     display: block;
     max-width: 40%;
     /*box-sizing: border-box;*/
+}
+#formLogin{
+    max-width: 100%;
 }
 
 .form-listSerie{
@@ -100,6 +116,10 @@ form{
     align-items: flex-end;
     padding: 15px;
 }
+
+/*  boutons  */
+
+
 
 input,
 select,
@@ -167,8 +187,37 @@ th{
     order: 4;
     width: 50%;
 }
+
+/*  détails profil participants  */
+#container{
+    display: flex;
+    width: 100vh;
+    justify-content: space-around;
+    margin-top: 2em;
+}
+#detailsParticipant{
+    padding: 1em;
+}
+#infosParticipant{
+    flex-direction: column;
+    height: 50vh;
+}
+#tableInfos{
+    margin-top: 2em;
+    height: 100%;
+    border: none;
+}
+table[id="tableInfos"] td{
+    border: none;
+}
+
 /* ----------------------footer------------------- */
 footer{
     width: 100%;
+    background:linear-gradient(#043773,#5eb5e0);
+    color: white;
 }
+#logofooter{
+    max-height: 20px;
 
+}

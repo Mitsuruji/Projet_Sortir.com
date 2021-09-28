@@ -55,18 +55,12 @@
 
                     {% if inscritBool == true and (sortie.etat.id != '5' and sortie.etat.id != '6') %}
                         - <a href="{{ path('sortie_se_desister', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}" title="Se desister sortie">Se désister</a>
-
-                        {# debug elseif #}
-                        <br>
-                        participantInscrit: {{ sortie.participantInscrit.count }}<br>
-                        nbInscriptionsMax:{{ sortie.nbInscriptionsMax }}<br>
-                        {# debug elseif comparateur nombre inscrits '==' ne fonctionne pas dans le elseif#}{# comparateur état fonctionne #}
-                    {% elseif sortie.participantInscrit.count == sortie.nbInscriptionsMax or sortie.etat.id == 3%}
-                        - <span id="sortieFermée">Fermée!</span>
-                    {% elseif sortie.etat.id != '5' and sortie.etat.id != '6' %}
+                    {% elseif sortie.etat.id != '5' and sortie.etat.id != '6' and sortie.etat.id != '3' %}
                         - <a href="{{ path('sortie_inscription', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}" title="S'incrire sortie">S'inscrire</a>
-                    {% else %}
-                        -
+                    {% endif %}
+
+                    {% if sortie.participantInscrit.count == sortie.nbInscriptionsMax or sortie.etat.id == '3'%}
+                        - <span id="sortieFermée">Fermée!</span>
                     {% endif %}
                 </td>
             </tr>
