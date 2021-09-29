@@ -27,6 +27,9 @@
     <h1 id="titre">
         <img src="{{ asset('img/logo_sortir.jpg') }}" id="logo" title="Logo sortir">
         <span id="titre">Sortir.com!</span>
+        {% if is_granted("ROLE_ADMIN") %}
+            <h4 id="interfaceAdmin">Interface Admin</h4>
+        {% endif %}
     </h1>
     {% include 'inc/_nav.html.twig' %}
 </header>

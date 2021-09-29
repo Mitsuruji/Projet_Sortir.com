@@ -3,8 +3,8 @@
 {% block title %}Register | {{ parent() }}{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
-    <div>
+    <div id="formRegister">
+        <h1>Register</h1>
         {{ form_start(registrationForm) }}
 
         {{ form_row(registrationForm.nom) }}

@@ -168,9 +168,9 @@ class SortieController extends AbstractController
     {
         try {
             //récupération instance Participant et Sortie
-            $sorties = $entityManager->getRepository(Sortie::class)->find($idSortie);
+            $sortie = $entityManager->getRepository(Sortie::class)->find($idSortie);
 
-            if ($sorties->getParticipantInscrit()->count() <= 0){
+            if ($sortie->getParticipantInscrit()->count() <= 0){
                 $this->addFlash('warning', 'Aucun inscrit sur cette sortie');
                 return $this->redirectToRoute('sortie_search');;
             }
@@ -178,7 +178,12 @@ class SortieController extends AbstractController
                 $participant = $participantRepository->find($idParticipant);
                 if ($this->getUser()->getUsername() == $participant->getUsername()) {
                     //insert BDD (table: participant_sortie)
-                    $sorties->removeParticipantInscrit($participant);
+                    $sortie->removeParticipantInscrit($participant);
+
+                    if($sortie->getEtat()->getId() == '3' && $sortie->getDateLimiteInscription() > new \DateTime()){
+                        $etat = $entityManager->getReference('App:Etat','2');
+                        $sortie->setEtat($etat);
+                    }
                     $entityManager = $this->getDoctrine()->getManager();
                     $entityManager->persist($participant);
                     $entityManager->flush();
@@ -210,15 +215,15 @@ class SortieController extends AbstractController
         try {
             //récupération instance Sortie
             $sortie = $sortieRepository->find($idSortie);
-            if($this->getUser() !== $sortie->getParticipantOrganisateur()){
+            if ($this->getUser() !== $sortie->getParticipantOrganisateur() and !$this->isGranted("ROLE_ADMIN")) {
                 throw $this->createAccessDeniedException('Vous n\'êtes pas authorisé à accéder à cette page!');
             }
 
-            if($sortie->getEtat()->getId() == '6'){
+            if ($sortie->getEtat()->getId() == '6') {
                 throw $this->createAccessDeniedException('Cette sortie a déjà été annulée!');
             }
 
-            if ($sortie->getMotifAnnulation() !== null){
+            if ($sortie->getMotifAnnulation() !== null) {
                 $sortie->setMotifAnnulation(null);
                 $entityManager->persist($sortie);
                 $entityManager->flush();
@@ -228,7 +233,7 @@ class SortieController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $etat = $entityManager->getReference('App:Etat','6');
+                $etat = $entityManager->getReference('App:Etat', '6');
                 $sortie->setEtat($etat);
                 $sortie->setMotifAnnulation($form->get('motifAnnulation')->getData());
                 $entityManager->persist($sortie);
@@ -245,7 +250,7 @@ class SortieController extends AbstractController
                 'annuleeSortieForm' => $form->createView()
             ]);
 
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             $this->addFlash('warning', $e->getMessage());
             return $this->redirectToRoute('sortie_search');
         }

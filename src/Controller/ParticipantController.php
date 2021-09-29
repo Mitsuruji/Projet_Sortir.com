@@ -50,16 +50,25 @@ class ParticipantController extends AbstractController
             $form ->remove('plainPassword');
 
             //gestion option inscription suivant ROLE_ADMIN
-            if (!$admin){
+            if ($admin){
+                $form->handleRequest($request);
+
+                //donne role admin au nouvel inscrit si case admin coché
+                if ($form->get('administrateur')->getData() == true){
+                    $participant->setRoles(["ROLE_ADMIN"]);
+                }
+                else{
+                    $participant->setRoles(["ROLE_USER"]);
+                }
+            }
+            else{
                 $form->remove('administrateur');
                 $form->remove('actif');
                 $form->remove('nom');
                 $form->remove('prenom');
                 $form->remove('mail');
-
+                $form->handleRequest($request);
             }
-
-            $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
                 $entityManager = $this->getDoctrine()->getManager();
@@ -175,7 +184,7 @@ class ParticipantController extends AbstractController
             throw $this->createNotFoundException("participant inexistant !!");
         }
 
-        if ($this->getUser()->getUsername() == $participant->getUsername()) {
+        if ($this->getUser()->getUsername() == $participant->getUsername() or $this->isGranted("ROLE_ADMIN")) {
             try {
                 $photo = $participant->getPhoto();
                 if ($photo) {

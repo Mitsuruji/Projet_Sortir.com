@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Liste | {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    {% for participant in participants %}
+        <a
+            href="{{ path('participant_details', {'id': participant.id}) }}"
+            class="
+            {% if participant.administrateur == true%}
+                admin
+            {% endif %}
+        ">
+            {{ participant.username }}
+        </a>
+
+    {% endfor %}
+{% endblock %}
+

@@ -15,6 +15,7 @@ class CheckEtatAndUpdate
         foreach ($sorties as $sortie) {
             /* @var $sortie Sortie */
 
+            //etat: Clôturée
             if ($sortie->getEtat()->getId() === 2 &&
                 ($sortie->getParticipantInscrit()->count() >= $sortie->getNbInscriptionsMax() or
                     $sortie->getDateLimiteInscription() < $now)) {
@@ -24,7 +25,8 @@ class CheckEtatAndUpdate
                 $entityManager->flush();
             }
 
-            if (($sortie->getEtat()->getId() === 2 or $sortie->getEtat()->getId() === 4) &&
+            //etat: Passée
+            elseif (($sortie->getEtat()->getId() === 2 or $sortie->getEtat()->getId() === 4) &&
                 date_timestamp_get($now) > date_timestamp_get($sortie->getDateHeureDebut())
                 + date_timestamp_get($sortie->getDuree()) +
                 timezone_offset_get(date_timezone_get($sortie->getDuree()), $sortie->getDuree())) {
@@ -35,7 +37,16 @@ class CheckEtatAndUpdate
 
             }
 
-            if (($sortie->getEtat()->getId() !== 1) &&
+            //etat: Activité en cours
+            elseif ($sortie->getEtat()->getId() !==4 && $now >= $sortie->getDateHeureDebut()){
+                $etatTermine = $entityManager->getReference('App:Etat', '4');
+                $sortie->setEtat($etatTermine);
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+            }
+
+            //etat: Archivée
+            elseif (($sortie->getEtat()->getId() !== 1) &&
                 $now > date_create_immutable(date_format($sortie->getDateHeureDebut(), 'Y-m-d H:i:s'))
                     ->add(date_interval_create_from_date_string("30 days"))) {
 

@@ -21,15 +21,20 @@
                 {{ form_row(registrationForm.actif) }}
 
             {% endif %}
+            <button type="submit" class="btn btn-lg btn-success">Update</button>
 
-            <button type="submit" class="btn btn-success">Update</button>
             {{ form_end(registrationForm) }}
 
             <div>
                 <a href="{{ path('participant_updatePassword',{'id':participant.id}) }}"><button class="btn btn-primary">Modifier mot de passe</button></a>
-                <a href="{{ path('participant_supprimerPhoto', {'id':participant.id}) }}"><button class="btn btn-danger">Supprimer la photo</button></a>
+                {% if participant.photo %}
+                    <a href="{{ path('participant_supprimerPhoto', {'id':participant.id}) }}"><button class="btn btn-danger">Supprimer la photo</button></a>
+                {% endif %}
+                {% if is_granted("ROLE_ADMIN")%}
+                    <a href="{{ path('admin_supprimerPatricipants', {'id':participant.id}) }}"><button class="btn btn-danger">Supprimer le participant</button></a>
+                {% endif %}
             </div>
-                <a href="{{ path('participant_details', {'id':participant.id}) }}"><button class="btn btn-info">Retour</button></a>
+                <a href="{{ path('participant_details', {'id':participant.id}) }}"><button type="reset" class="btn btn-info">Retour</button></a>
 
         {% else %}
             <h2>Erreur de navigation</h2>

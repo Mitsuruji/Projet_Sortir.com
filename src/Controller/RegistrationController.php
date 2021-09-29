@@ -36,7 +36,8 @@ class RegistrationController extends AbstractController
         }
         else{
             $form->handleRequest($request);
-            //donne role admin au nouvel inscrit
+
+            //donne role admin au nouvel inscrit si case admin coché
             if ($form->get('administrateur')->getData() == true){
                 $user->setRoles(["ROLE_ADMIN"]);
             }

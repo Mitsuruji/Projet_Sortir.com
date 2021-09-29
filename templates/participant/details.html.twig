@@ -11,7 +11,7 @@
         </div>
         <div id="detailsParticipant">
             {% if app.user.id == participant.id or is_granted("ROLE_ADMIN")%}
-                <h2>Mon profil:</h2>
+                <h2>Informations:</h2>
 
                 <div id="infosParticipant">
                     <table id="tableInfos">
@@ -63,6 +63,14 @@
                             <tr>
                                 <td>Campus:</td>
                                 <td>{{ participant.campus.nom}}</td>
+                            </tr>
+                            <tr>
+                                <td>Telephone ENI:</td>
+                                <td>0123456789</td>
+                            </tr>
+                            <tr>
+                                <td>Contact ENI:</td>
+                                <td>contact.sortie@eni.fr</td>
                             </tr>
                         </tbody>
                     </table>

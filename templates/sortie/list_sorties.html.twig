@@ -3,15 +3,16 @@
 {% block title %}Hello SortieController!{% endblock %}
 
 {% block body %}
-    <div>
-        <h3 style="float: right">Date du jour : {{ "now"|date("d/m/Y") }}<br>
-            Participant : {{ app.user.username }}
-        </h3>
+    <div id="formSearch">
+        <h5 style="float: right">
+            Date du jour : {{ "now"|date("d/m/Y") }}
+        </h5>
+
+        <div class="form-listSerie">
+            {% include 'sortie/searchOptions.html.twig' with {searchSortiesForm:searchSortiesForm} only%}
+        </div>
     </div>
-    <div class="form-listSerie">
-        {% include 'sortie/searchOptions.html.twig' with {searchSortiesForm:searchSortiesForm} only%}
-    </div>
-   <table>
+    <table id="tableSortie">
        <thead>
         <tr>
             <th>Nom de la sortie</th>
@@ -32,7 +33,7 @@
                 <td>{{ sortie.dateHeureDebut|date("d/m/Y H:i") }}</td>
                 <td>{{ sortie.dateLimiteInscription|date("d/m/Y H:i") }}</td>
                 <td>{{ sortie.participantInscrit.count }} / {{ sortie.nbInscriptionsMax }}</td>
-                <td>{{ sortie.etat.libelle }}</td>
+                <td class="etat{{ sortie.etat.id }}">{{ sortie.etat.libelle }}</td>
                 <td>{% for inscrit in sortie.participantInscrit %}
                         {% if inscrit.username == app.user.username %}
                             X
@@ -42,7 +43,7 @@
                 </td>
                 <td><a href="{{ path('participant_details', {'id': sortie.participantOrganisateur.id}) }}">{{ sortie.participantOrganisateur.username }}</a></td>
                 <td>
-                    {% if app.user.username == sortie.participantOrganisateur.username %}
+                    {% if app.user.username == sortie.participantOrganisateur.username or is_granted("ROLE_ADMIN")%}
                         {% if sortie.etat.id != '6' and sortie.etat.id != '5' %}
                             <a href="#" title="Modifier sortie">Modifier</a>
                             - <a href="{{ path('sortie_annulation', {'idSortie': sortie.id}) }}" title="Annuler sortie">Annuler</a>
@@ -66,5 +67,5 @@
             </tr>
         {% endfor %}
        </tbody>
-   </table>
+    </table>
 {% endblock %}

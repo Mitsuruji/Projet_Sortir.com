@@ -88,12 +88,25 @@ form{
     max-width: 40%;
     /*box-sizing: border-box;*/
 
+
+
+
 }
 #formLogin,
 #formSortie,
-#formUpdate{
-    max-width: 100%;
+#formUpdate,
+#formRegister,
+#tableSortie,
+#formSearch,
+#cadreBody
+{
+    min-width: 100%;
     margin-top: 2em;
+    border: #f36f3a 5px double;
+    border-radius: 10px;
+    box-shadow: #796ec2 10px 5px;
+    padding: 10px;
+    background : linear-gradient(#fcf1d5,#FAE6B1, #FAE6B1, #c7b78c);
 }
 
 .form-listSerie{
@@ -222,6 +235,34 @@ th{
 table[id="tableInfos"] td{
     border: none;
 }
+
+
+.admin{
+    color: green;
+}
+#interfaceAdmin{
+    border: green 2px solid;
+    border-radius: 3px;
+   background-color: mediumseagreen;
+    color: #f1f2f3;
+    text-align: center;
+}
+
+/* état sortie*/
+.etat2{
+    background-color: rgba(143, 188, 143, 0.30);
+}
+.etat3{
+    background-color: rgba(243, 145, 144, 0.30);
+}
+
+.etat4{
+    background-color: rgba(94, 181, 224, 0.29);
+}
+.etat6 {
+    background-color: rgba(197, 47, 150, 0.3);
+}
+
 
 /* ----------------------footer------------------- */
 footer{
