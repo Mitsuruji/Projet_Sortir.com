@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block body %}
+    <div>
+        <h3 style="padding: 20px 0">Les sorties de mon campus:</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom de la sortie</th>
+                    <th>Date de la sortie</th>
+                    <th>Lieu</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sortie in sorties %}
+                <tr>
+                    <td>
+                        <a href="{{ path('sortie_detail', {'idSortie': sortie.id}) }}"
+                           title="Afficher sortie">{{ sortie.nom }}</a>
+                    </td>
+                    <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i:s') }}</td>
+                    <td>{{ sortie.sortieLieu.nom }},
+                    {{ sortie.sortieLieu.lieuVille.nom }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+
+

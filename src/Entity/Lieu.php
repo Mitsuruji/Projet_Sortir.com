@@ -116,22 +116,22 @@ class Lieu
         return $this->lieuSorties;
     }
 
-    public function addLieuSorty(Sortie $lieuSorty): self
+    public function addLieuSorties(Sortie $lieuSorties): self
     {
-        if (!$this->lieuSorties->contains($lieuSorty)) {
-            $this->lieuSorties[] = $lieuSorty;
-            $lieuSorty->setSortieLieu($this);
+        if (!$this->lieuSorties->contains($lieuSorties)) {
+            $this->lieuSorties[] = $lieuSorties;
+            $lieuSorties->setSortieLieu($this);
         }
 
         return $this;
     }
 
-    public function removeLieuSorty(Sortie $lieuSorty): self
+    public function removeLieuSorties(Sortie $lieuSorties): self
     {
-        if ($this->lieuSorties->removeElement($lieuSorty)) {
+        if ($this->lieuSorties->removeElement($lieuSorties)) {
             // set the owning side to null (unless already changed)
-            if ($lieuSorty->getSortieLieu() === $this) {
-                $lieuSorty->setSortieLieu(null);
+            if ($lieuSorties->getSortieLieu() === $this) {
+                $lieuSorties->setSortieLieu(null);
             }
         }
 

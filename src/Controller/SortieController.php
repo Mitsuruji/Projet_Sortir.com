@@ -9,6 +9,8 @@ use App\Form\AnnulerSortieType;
 use App\Form\SearchSortiesType;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
+use App\Services\CheckDeviceFromUser;
+use App\Services\CheckEtatAndUpdate;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,10 +24,14 @@ class SortieController extends AbstractController
      */
     public function sortie(SortieRepository $sortieRepository,
                            Request $request,
-                           EntityManagerInterface $entityManager): Response
+                           EntityManagerInterface $entityManager,
+                            CheckDeviceFromUser $device,
+                            CheckEtatAndUpdate $checkEtat): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->getUser();
+        $userDevice = $device->checkDeviceFromUser($request);
+
         $data = new SearchOptions();
         $data->setCurrentUser($user);
 
@@ -35,47 +41,20 @@ class SortieController extends AbstractController
         $sorties = $sortieRepository->findSearch($data);
 
         // change l'etat de la sortie en fonction de la date
-        $now = new \DateTime();
-        foreach ($sorties as $sortie){
-            /* @var $sortie Sortie */
+        $checkEtat->checkEtatAndUpdate($sorties, $entityManager);
 
-           if($sortie->getEtat()->getId() === 2 &&
-               ($sortie->getParticipantInscrit()->count() >= $sortie->getNbInscriptionsMax() or
-               $sortie->getDateLimiteInscription() < $now))
-           {
-               $etatCloture = $entityManager->getReference('App:Etat','3');
-                $sortie->setEtat($etatCloture);
-               $entityManager->persist($sortie);
-               $entityManager->flush();
-           }
-           if (($sortie->getEtat()->getId() !== 1 or $sortie->getEtat()->getId() !== 5) &&
-                $now > date_create_immutable(date_format($sortie->getDateHeureDebut(),'Y-m-d H:i:s'))
-                    ->add(date_interval_create_from_date_string("30 days")))
-           {
-               $etatArchive = $entityManager->getReference('App:Etat','5');
-               $sortie->setEtat($etatArchive);
-               $entityManager->persist($sortie);
-               $entityManager->flush();
-           }
-
-           if (($sortie->getEtat()->getId() === 2 or $sortie->getEtat()->getId() === 4) &&
-               date_timestamp_get($now) > $datedebut=date_timestamp_get($sortie->getDateHeureDebut())
-                + date_timestamp_get($sortie->getDuree()) +
-                   timezone_offset_get(date_timezone_get($sortie->getDuree()),$sortie->getDuree()))
-           {
-               $etatTermine = $entityManager->getReference('App:Etat','5');
-               $sortie->setEtat($etatTermine);
-               $entityManager->persist($sortie);
-               $entityManager->flush();
-
-           }
-
+        if ($userDevice == 'isMobile') {
+            return $this->render('sortie/list_sorties_mobile.html.twig', [
+                'sorties' => $sorties,
+                'searchSortiesForm' => $form->createView()
+            ]);
         }
-
+        else {
         return $this->render('sortie/list_sorties.html.twig', [
             'sorties' => $sorties,
             'searchSortiesForm' => $form->createView()
         ]);
+        }
     }
 
     /**
@@ -106,8 +85,7 @@ class SortieController extends AbstractController
         }
 
         return $this->render('sortie/create.html.twig', [
-            'sortieForm'=>   $sortieForm->createView(),
-            'sortie'=> $sortie
+            'sortieForm'=>   $sortieForm->createView()
 
         ]);
     }
@@ -123,9 +101,7 @@ class SortieController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         try {
             $sortie = $sortieRepository->find($idSortie);
-            if ($sortie->getEtat()->getId() == '5') {
-                throw $this->createAccessDeniedException('Cette sortie est archivée, vous n\'êtes pas authorisé à accéder à cette page!');
-            }
+
             return $this->render('sortie/details.html.twig', [
                 'sortie' => $sortie
             ]);
@@ -139,7 +115,10 @@ class SortieController extends AbstractController
     /**
      * @Route("/sortie/{idSortie}_{idParticipant}/inscription", name="sortie_inscription")
      */
-    public function inscriptionSortie(int $idParticipant,int $idSortie, ParticipantRepository $participantRepository, EntityManagerInterface $entityManager): Response
+    public function inscriptionSortie(int $idParticipant,int $idSortie,
+                                      ParticipantRepository $participantRepository,
+                                      EntityManagerInterface $entityManager,
+                                      Request $request): Response
     {
         try {
             //récupération instance Participant et Sortie
@@ -175,6 +154,7 @@ class SortieController extends AbstractController
             }
 
             return $this->redirectToRoute('sortie_search');
+
         } catch (\Exception $e) {
             $this->addFlash('warning', $e->getMessage());
             return $this->redirectToRoute('sortie_search');
@@ -232,6 +212,10 @@ class SortieController extends AbstractController
             $sortie = $sortieRepository->find($idSortie);
             if($this->getUser() !== $sortie->getParticipantOrganisateur()){
                 throw $this->createAccessDeniedException('Vous n\'êtes pas authorisé à accéder à cette page!');
+            }
+
+            if($sortie->getEtat()->getId() == '6'){
+                throw $this->createAccessDeniedException('Cette sortie a déjà été annulée!');
             }
 
             if ($sortie->getMotifAnnulation() !== null){

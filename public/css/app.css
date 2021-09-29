@@ -97,14 +97,15 @@ form{
 .form-listSerie1 {
     display: flex;
     flex-flow: column;
-    max-width: 40%;
-    padding: 0 5%;
+    max-width: 30%;
+    /*padding: 0 5%;*/
+
 }
 
 .form-listSerie2 {
     display: flex;
     flex-flow: column wrap;
-    max-width: 40%;
+    max-width: 50%;
     padding: 0 5%;
 }
 
@@ -114,7 +115,7 @@ form{
 
 .form-listSerie button{
     align-items: flex-end;
-    padding: 15px;
+    padding: 10px;
 }
 
 /*  boutons  */
@@ -159,6 +160,7 @@ th{
     text-align: center;
     order: 1;
     width: 100%;
+    padding: 20px 0;
 }
 
 .detailSortieBloc1{
@@ -186,6 +188,7 @@ th{
     display: grid;
     order: 4;
     width: 50%;
+    margin-top: 20px;
 }
 
 /*  détails profil participants  */
