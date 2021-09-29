@@ -10,51 +10,65 @@
             {% endif %}
         </div>
         <div id="detailsParticipant">
-            {% if app.user.id == participant.id %}
-            <h2>Mon profil:</h2>
-            {% else %}
-            <h2>{{ participant.username }}</h2>
-            {% endif %}
-            <div id="infosParticipant">
-                <table id="tableInfos">
-                    <tbody>
-                    <tr>
-                        <td>Nom: </td>
-                        <td>{{ participant.nom }}</td>
-                    </tr>
-                    <tr>
-                        <td>Prenom: </td>
-                        <td>{{ participant.prenom }}</td>
-                    </tr>
-                    {% if app.user.id == participant.id %}
+            {% if app.user.id == participant.id or is_granted("ROLE_ADMIN")%}
+                <h2>Mon profil:</h2>
+
+                <div id="infosParticipant">
+                    <table id="tableInfos">
+                        <tbody>
                         <tr>
-                            <td>Pseudo:</td>
-                            <td>{{ participant.username }}</td>
+                            <td>Nom: </td>
+                            <td>{{ participant.nom }}</td>
                         </tr>
-                    {% endif %}
-                    <tr>
-                        <td>Telephone:</td>
-                        <td>{{ participant.telephone }}</td>
-                    </tr>
-                    <tr>
-                        <td>Email:</td>
-                        <td>{{ participant.mail}}</td>
-                    </tr>
-                    <tr>
-                        <td>Campus:</td>
-                        <td>{{ participant.campus.nom}}</td>
-                    </tr>
-                    </tbody>
-                </table>
-                {% if app.user.id == participant.id %}
+                        <tr>
+                            <td>Prenom: </td>
+                            <td>{{ participant.prenom }}</td>
+                        </tr>
+                        {% if app.user.id == participant.id %}
+                            <tr>
+                                <td>Pseudo:</td>
+                                <td>{{ participant.username }}</td>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            <td>Telephone:</td>
+                            <td>{{ participant.telephone }}</td>
+                        </tr>
+                        <tr>
+                            <td>Email:</td>
+                            <td>{{ participant.mail}}</td>
+                        </tr>
+                        <tr>
+                            <td>Campus:</td>
+                            <td>{{ participant.campus.nom}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
                     <a href="{{ path('participant_update', {'id':participant.id}) }}">
-                        <button class="btn btn-primary">Modifier mes infos</button>
+                        <button class="btn btn-primary">Modifier les infos</button>
                     </a>
                     <a href="{{ path('sortie_search') }}"><button class="btn btn-info">Retour</button></a>
-                {% else %}
+                </div>
+
+            {% else %}
+                <h2>{{ participant.username }}</h2>
+
+                <div id="infosParticipant">
+                    <table id="tableInfos">
+                        <tbody>
+                            <tr>
+                                <td>Pseudo:</td>
+                                <td>{{ participant.username }}</td>
+                            </tr>
+                            <tr>
+                                <td>Campus:</td>
+                                <td>{{ participant.campus.nom}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <a href="{{ path('sortie_search') }}"><button class="btn btn-info">Retour</button></a>
-                {% endif %}
-            </div>
+                </div>
+            {% endif %}
         </div>
     </div>
 

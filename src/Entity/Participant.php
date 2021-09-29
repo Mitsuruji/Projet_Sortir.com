@@ -123,11 +123,16 @@ class Participant implements UserInterface
      */
     public function getRoles(): array
     {
+        return $this->roles;
+
+        /*
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
+        */
+
     }
 
     public function setRoles(array $roles): self

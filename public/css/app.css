@@ -16,6 +16,7 @@ footer{
 
 header{
     background:linear-gradient(#5eb5e0,#043773);
+    margin-bottom: 2em;
 }
 header h1{
     font-size: 5em;
@@ -50,8 +51,6 @@ body{
     background: linear-gradient(#84c1ec, #fff4e7, #84c1ec);
     background-position: 50% 100%;
     background-attachment: fixed;
-
-
 }
 
 main{
@@ -60,6 +59,9 @@ main{
     margin-bottom: 5em;
 }
 
+h1{
+    text-decoration: underline;
+}
 
 /* messages flash*/
 .flash{
@@ -76,15 +78,22 @@ main{
 .flash-warning{
     background-color: #f39190;
 }
+.flash-info{
+    background-color: #5eb5e0;
+}
 
 /* formulaire*/
 form{
     display: block;
     max-width: 40%;
     /*box-sizing: border-box;*/
+
 }
-#formLogin{
+#formLogin,
+#formSortie,
+#formUpdate{
     max-width: 100%;
+    margin-top: 2em;
 }
 
 .form-listSerie{

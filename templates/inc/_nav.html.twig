@@ -1,8 +1,11 @@
 <nav>
-    <a href="{{ path('sortie_search') }}" title="Home">Home</a>
+    <a href="{{ path('sortie_search') }}" title="Liste sorties">Liste sorties</a>
 
 
     {% if app.user %}
+        {% if is_granted("ROLE_ADMIN") %}
+            <a href="{{ path('admin_dashboard') }}" title="Dashboard">Dashboard</a>
+        {% endif %}
 {#        <a href="{{ path('sortie_search') }}" title="Liste sorties">Liste des sorties</a>#}
         <a href="{{ path('participant_details', {'id':app.user.id})}}" title="">Mon profil</a>
         <a href="{{ path('create_sortieForm') }}" title="Créer une sortie sortie">Créer une nouvelle sortie</a>
@@ -12,5 +15,9 @@
         <a href="{{ path('app_login') }}" title="Login">Se connecter</a>
         <a href="{{ path('app_register') }}" title="Register">S'inscrire</a>
 
+
+
     {% endif %}
+
+
 </nav>

@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>DashBoard: </h1>
+    <br/>
+
+    <div>
+        <a href="{{ path('app_register') }}"><button class="btn btn-primary">Créer un nouveau participant</button></a>
+
+    </div>
+{% endblock %}
+
+{% block title %}
+    DashBoard Admin | {{ parent() }}
+{% endblock %}
+

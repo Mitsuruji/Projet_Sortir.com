@@ -43,45 +43,60 @@ class ParticipantController extends AbstractController
             throw $this->createNotFoundException('Pas de participant trouvé');
         }
 
-        $form=$this->createForm(RegistrationFormType::class, $participant);
-        $form ->remove('plainPassword');
+        $admin = $this->isGranted("ROLE_ADMIN");
 
+        if ($this->getUser()->getUsername() == $participant->getUsername() or $admin){
+            $form=$this->createForm(RegistrationFormType::class, $participant);
+            $form ->remove('plainPassword');
 
-        $form->handleRequest($request);
+            //gestion option inscription suivant ROLE_ADMIN
+            if (!$admin){
+                $form->remove('administrateur');
+                $form->remove('actif');
+                $form->remove('nom');
+                $form->remove('prenom');
+                $form->remove('mail');
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-
-            //gestion image
-            $photo = $form->get('photo')->getData();
-            if ($photo){
-
-                //suppression de l'ancienne photo
-                $nomphoto = $participant->getPhoto();
-                if ($nomphoto){
-                    unlink($this->getParameter('images_directory').'/'.$nomphoto);
-                }
-
-
-                //genere un nouveau nom de fichier
-                $fichier = md5(uniqid()).'.'.$photo->guessExtension();
-
-                //copie de la photo dans le dossier uploads
-                $photo->move($this->getParameter('images_directory'), $fichier);
-
-                //envoie du nom de fichier dans la BDD
-                $participant->setPhoto($fichier);
             }
 
-            $entityManager->persist($participant);
-            $entityManager->flush();
+            $form->handleRequest($request);
 
-            $this->addFlash('success', 'Modification des informations réussie !');
-            return $this->render('participant/details.html.twig', ["participant"=>$participant]);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $entityManager = $this->getDoctrine()->getManager();
+
+                //gestion image
+                $photo = $form->get('photo')->getData();
+                if ($photo){
+                    //suppression de l'ancienne photo
+                    $nomphoto = $participant->getPhoto();
+                    if ($nomphoto){
+                        unlink($this->getParameter('images_directory').'/'.$nomphoto);
+                    }
+
+                    //genere un nouveau nom de fichier
+                    $fichier = md5(uniqid()).'.'.$photo->guessExtension();
+
+                    //copie de la photo dans le dossier uploads
+                    $photo->move($this->getParameter('images_directory'), $fichier);
+
+                    //envoie du nom de fichier dans la BDD
+                    $participant->setPhoto($fichier);
+                }
+
+                $entityManager->persist($participant);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'Modification des informations réussie !');
+                return $this->render('participant/details.html.twig', ["participant"=>$participant]);
+            }
+
+            if ($form->isSubmitted() && !$form->isValid()) {
+                $this->addFlash('warning', 'Erreur dans le formulaire update');
+            }
         }
-
-        if ($form->isSubmitted() && !$form->isValid()) {
-            $this->addFlash('warning', 'Erreur dans le formulaire update');
+        else{
+            $this->addFlash('warning', 'Vous ne pouvez pas modifier les informations d\'un autre participant');
+            return $this->render('participant/details.html.twig', ["participant"=>$participant]);
         }
 
         return $this->render('participant/update.html.twig', [
@@ -101,45 +116,96 @@ class ParticipantController extends AbstractController
             throw $this->createNotFoundException('Pas de participant trouvé');
         }
 
-        $form=$this->createForm(RegistrationFormType::class, $participant);
+        if ($this->getUser()->getUsername() == $participant->getUsername()){
 
-        //desactivation des champs non nécessaires
-        $form->remove('nom');
-        $form->remove('prenom');
-        $form->remove('username');
-        $form->remove('telephone');
-        $form->remove('mail');
-        $form->remove('campus');
+            $form=$this->createForm(RegistrationFormType::class, $participant);
 
-        $form->handleRequest($request);
+            //desactivation des champs non nécessaires
+            $form->remove('nom');
+            $form->remove('prenom');
+            $form->remove('username');
+            $form->remove('telephone');
+            $form->remove('mail');
+            $form->remove('campus');
+            $form->remove('photo');
+            $form->remove('administrateur');
+            $form->remove('actif');
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
-            $participant->setPassword(
-                $passwordEncoder->encodePassword(
-                    $participant,
-                    $form->get('plainPassword')->getData()
-                )
-            );
+            $form->handleRequest($request);
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($participant);
-            $entityManager->flush();
+            if ($form->isSubmitted() && $form->isValid()) {
+                // encode the plain password
+                $participant->setPassword(
+                    $passwordEncoder->encodePassword(
+                        $participant,
+                        $form->get('plainPassword')->getData()
+                    )
+                );
 
-            echo 'passage valid';
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($participant);
+                $entityManager->flush();
 
-            $this->addFlash('success', 'Modification mot de passe réussie !');
-            return $this->render('participant/details.html.twig', ["participant"=>$participant]);
+                $this->addFlash('success', 'Modification mot de passe réussie !');
+                return $this->render('participant/details.html.twig', ["participant"=>$participant]);
+            }
+
+            if ($form->isSubmitted() && !$form->isValid()) {
+                $this->addFlash('warning', 'Erreur dans le formulaire du mot de passe');
+            }
         }
-
-
-
-        if ($form->isSubmitted() && !$form->isValid()) {
-            $this->addFlash('warning', 'Erreur dans le formulaire du mot de passe');
+        else{
+            $this->addFlash('warning', 'Vous ne pouvez pas modifier le mot de passe d\'un autre participant');
+            return $this->render('participant/details.html.twig', ["participant"=>$participant]);
         }
 
         return $this->render('participant/updatepassword.html.twig', [
             'registrationForm' => $form->createView(), "participant"=>$participant]);
     }
+
+    /**
+     * @Route("/participant/details/{id}/supprimerPhoto", name="participant_supprimerPhoto")
+     */
+    public function supprimerPhoto(int $id, ParticipantRepository $participantRepository): Response
+    {
+        $participant = $participantRepository->find($id);
+
+        //gestion erreur
+        if (!$participant){
+            throw $this->createNotFoundException("participant inexistant !!");
+        }
+
+        if ($this->getUser()->getUsername() == $participant->getUsername()) {
+            try {
+                $photo = $participant->getPhoto();
+                if ($photo) {
+                    //suppression du fichier de l'ancienne photo
+                    $nomphoto = $participant->getPhoto();
+                    if ($nomphoto) {
+                        unlink($this->getParameter('images_directory') . '/' . $nomphoto);
+                    }
+
+                    //suppression de la photo dans la bdd
+                    $participant->setPhoto(null);
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($participant);
+                    $entityManager->flush();
+
+                    $this->addFlash('success', 'Suppression de la photo réussie !');
+                    return $this->render('participant/details.html.twig', ["participant" => $participant]);
+                }
+                else{
+                    $this->addFlash('warning', 'Pas de photo à supprimer');
+                    return $this->render('participant/details.html.twig', ["participant" => $participant]);
+                }
+            } catch (\Exception $e){
+                $this->addFlash('warning', $e->getMessage());
+                return $this->render('participant/details.html.twig', ["participant" => $participant]);
+            }
+        }
+
+        return $this->render('participant/details.html.twig', ["participant"=>$participant]);
+    }
+
 
 }

@@ -25,8 +25,8 @@
 <body>
 <header>
     <h1 id="titre">
-        <span id="titre">Sortir.com!</span>
         <img src="{{ asset('img/logo_sortir.jpg') }}" id="logo" title="Logo sortir">
+        <span id="titre">Sortir.com!</span>
     </h1>
     {% include 'inc/_nav.html.twig' %}
 </header>
@@ -45,7 +45,7 @@
 </main>
 
 <footer>
-    <p>© <span id="titre">Sortir.com!</span> <img src="{{ asset('img/logo_sortir.jpg') }}" id="logofooter" title="Logo sortir"> - {{ "now"|date("Y")}} </p>
+    <p>© <img src="{{ asset('img/logo_sortir.jpg') }}" id="logofooter" title="Logo sortir"> <span id="titre">Sortir.com!</span>  - {{ "now"|date("Y")}} </p>
 </footer>
 </body>
 </html>

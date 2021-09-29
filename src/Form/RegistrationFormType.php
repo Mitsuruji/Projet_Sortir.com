@@ -7,6 +7,7 @@ use App\Entity\Campus;
 use App\Entity\Participant;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -24,6 +25,8 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class, [
+                'label' => 'Nom* ',
+                'required' => true,
                 'attr' => ['placeholder' => '50 caractères max'],
                 'constraints' => [
                     new NotBlank([
@@ -36,6 +39,8 @@ class RegistrationFormType extends AbstractType
                 ]
             ])
             ->add('prenom', TextType::class, [
+                'label' => 'Prénom* ',
+                'required' => true,
                 'attr' => ['placeholder' => '50 caractères max'],
                 'constraints' => [
                     new NotBlank([
@@ -48,6 +53,8 @@ class RegistrationFormType extends AbstractType
                 ]
             ])
             ->add('telephone', TextType::class, [
+                'label' => 'Telephone* ',
+                'required' => true,
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Please enter a pseudo',
@@ -59,7 +66,8 @@ class RegistrationFormType extends AbstractType
                 ]
             ])
             ->add('username', TextType::class, [
-                'label' => 'Pseudo',
+                'label' => 'Pseudo*',
+                'required' => true,
                 'attr' => ['placeholder' => '50 caractères max'],
                 'constraints' => [
                     new NotBlank([
@@ -72,6 +80,8 @@ class RegistrationFormType extends AbstractType
                 ]
             ])
             ->add('mail', EmailType::class,[
+                'label' => 'Mail* ',
+                'required' => true,
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Please enter an email',
@@ -79,6 +89,7 @@ class RegistrationFormType extends AbstractType
                 ]
             ])
             ->add('campus', EntityType::class,[
+                'label' => 'Campus* ',
                 'class' => Campus::class,
                 'choice_label' => 'nom'
             ])
@@ -87,8 +98,8 @@ class RegistrationFormType extends AbstractType
                 'invalid_message' => 'The password fields must match.',
                 'options' => ['attr' => ['class' => 'password-field']],
                 'required' => true,
-                'first_options'  => ['label' => 'Mot de passe'],
-                'second_options' => ['label' => 'Repeter mot de passe'],
+                'first_options'  => ['label' => 'Mot de passe*:'],
+                'second_options' => ['label' => 'Repeter mot de passe*:'],
                 'mapped' => false,
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
@@ -113,7 +124,14 @@ class RegistrationFormType extends AbstractType
                     ])
                 ]
             ])
-
+            ->add('administrateur', CheckboxType::class,[
+                'label' => 'admin',
+                'required' => false,
+            ])
+            ->add('actif', CheckboxType::class,[
+                'label' => 'actif',
+                'required' => false,
+            ])
 
             /*terms validation
              ->add('agreeTerms', CheckboxType::class, [
