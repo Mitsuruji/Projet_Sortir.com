@@ -73,7 +73,6 @@ class CheckEtatAndUpdate
                 $entityManager->flush();
             }
         }
-
     }
 
 }

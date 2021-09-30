@@ -19,6 +19,9 @@ class ParticipantController extends AbstractController
      */
     public function detailsParticipant(int $id, ParticipantRepository $participantRepository): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         $participant = $participantRepository->find($id);
 
         //gestion erreur
@@ -35,6 +38,9 @@ class ParticipantController extends AbstractController
      */
     public function updateDetails(int $id, EntityManagerInterface $entityManager, Request $request): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         //récupération du participant à modifier dans la bdd
         $participant= $entityManager->getRepository(Participant::class)->find($id);
 
@@ -56,6 +62,9 @@ class ParticipantController extends AbstractController
                 //donne role admin au nouvel inscrit si case admin coché
                 if ($form->get('administrateur')->getData() == true){
                     $participant->setRoles(["ROLE_ADMIN"]);
+                }
+                if ($form->get('actif')->getData() == false) {
+                    $participant->setRoles(["ROLE_INACTIF"]);
                 }
                 else{
                     $participant->setRoles(["ROLE_USER"]);
@@ -117,6 +126,10 @@ class ParticipantController extends AbstractController
      */
     public function updatePassword(int $id, EntityManagerInterface $entityManager, Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {
+
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         //récupération du participant à modifier dans la bdd
         $participant= $entityManager->getRepository(Participant::class)->find($id);
 
@@ -177,6 +190,10 @@ class ParticipantController extends AbstractController
      */
     public function supprimerPhoto(int $id, ParticipantRepository $participantRepository): Response
     {
+
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         $participant = $participantRepository->find($id);
 
         //gestion erreur

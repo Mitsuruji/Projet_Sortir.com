@@ -41,6 +41,9 @@ class RegistrationController extends AbstractController
             if ($form->get('administrateur')->getData() == true){
                 $user->setRoles(["ROLE_ADMIN"]);
             }
+            if ($form->get('actif')->getData() == false) {
+                $user->setRoles(["ROLE_INACTIF"]);
+            }
         }
 
         if ($form->isSubmitted() && $form->isValid()) {

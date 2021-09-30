@@ -45,7 +45,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/supprimerPatricipants", name="supprimerPatricipants")
+     * @Route("/supprimerParticipant/{id}", name="supprimerParticipant")
      */
     public function supprimerParticipant(int $id, ParticipantRepository $participantRepository): Response
     {

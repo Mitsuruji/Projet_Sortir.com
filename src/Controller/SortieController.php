@@ -29,6 +29,8 @@ class SortieController extends AbstractController
                             CheckEtatAndUpdate $checkEtat): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         $user = $this->getUser();
         $userDevice = $device->checkDeviceFromUser($request);
 
@@ -63,6 +65,7 @@ class SortieController extends AbstractController
     public function createSortieForm(Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_USER');
         $user = $this->getUser()->getId();
         $sortie =new Sortie();
         $sortieForm= $this->createForm(SortieFormType::class, $sortie);
@@ -99,6 +102,7 @@ class SortieController extends AbstractController
                            EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_USER');
         try {
             $sortie = $sortieRepository->find($idSortie);
 
@@ -120,6 +124,9 @@ class SortieController extends AbstractController
                                       EntityManagerInterface $entityManager,
                                       Request $request): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         try {
             //récupération instance Participant et Sortie
             $sortie = $entityManager->getRepository(Sortie::class)->find($idSortie);
@@ -166,6 +173,9 @@ class SortieController extends AbstractController
      */
     public function seDesisterSortie(int $idParticipant,int $idSortie, ParticipantRepository $participantRepository, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         try {
             //récupération instance Participant et Sortie
             $sortie = $entityManager->getRepository(Sortie::class)->find($idSortie);
@@ -211,6 +221,7 @@ class SortieController extends AbstractController
         EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
         try {
             //récupération instance Sortie
