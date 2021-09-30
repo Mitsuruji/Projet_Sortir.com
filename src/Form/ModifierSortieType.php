@@ -42,10 +42,9 @@ class ModifierSortieType extends AbstractType
             ])
 
             ->add('dateLimiteInscription', DateType::class, [
-                'label'=>"Date limite d'inscription* :",
+                'label'=>'Date limite d\'inscription * :',
                 'widget' => 'single_text',
                 'constraints' => [
-
                     new NotBlank([
                         'message' => 'Merci de renseigner une date valide',
                     ]),

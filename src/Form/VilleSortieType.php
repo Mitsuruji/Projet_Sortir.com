@@ -28,14 +28,6 @@ class VilleSortieType extends AbstractType
 
             ])
 
-            ->add('codePostal', IntegerType::class,[
-                'label'=>'Code Postal * :',
-                'constraints'=>[
-                    new NotBlank([
-                        'message'=>"Merci d'indiquer le code postal"
-                    ])
-                ]
-            ])
         ;
     }
 

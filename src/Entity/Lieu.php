@@ -52,7 +52,7 @@ class Lieu
      *
      * --lisaison unidirectionnelle de Lieu vers Ville
      *
-     * @ORM\ManyToOne(targetEntity=Ville::class, inversedBy="villeLieux")
+     * @ORM\ManyToOne(targetEntity=Ville::class, inversedBy="villeLieux", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $lieuVille;
@@ -156,4 +156,10 @@ class Lieu
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return $this->getNom();
+    }
+
 }

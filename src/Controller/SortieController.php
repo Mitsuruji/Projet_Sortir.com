@@ -84,12 +84,19 @@ class SortieController extends AbstractController
         $campusActuelle = $participantActuelle->getCampus();
         $sortie->setCampusOrganisateur($campusActuelle);
 
-        $etat = $entityManager->getReference('App:Etat','2');
-        $sortie->setEtat($etat);
+        /*$etat = $entityManager->getReference('App:Etat','2');
+        $sortie->setEtat($etat);*/
 
         if($sortieForm->isSubmitted() && $sortieForm->isValid()){
-            $sortieForm->get('bouton')->getData();
-            dd($sortieForm->get('bouton')->getData());
+            $boutonValue =$request->request->get("bouton");
+            if ($boutonValue== "Create"){
+                $etat = $entityManager->getReference('App:Etat','1');
+                $sortie->setEtat($etat);
+            }
+            else{
+                 $etat = $entityManager->getReference('App:Etat','2');
+                 $sortie->setEtat($etat);
+            }
 
             $entityManager->persist($sortie);
             $entityManager->flush();

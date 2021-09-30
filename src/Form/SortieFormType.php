@@ -3,8 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Campus;
-use App\Entity\Participant;
+use App\Entity\Lieu;
 use App\Entity\Sortie;
+use App\Entity\Ville;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -14,6 +15,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Length;
@@ -69,7 +73,8 @@ class SortieFormType extends AbstractType
             ])
 
             ->add('infosSortie', TextareaType::class, [
-                'label'=>'Description et informations complémentaires sur la sortie *:',
+                'label'=>'Description et informations complémentaires sur la sortie :',
+                'required'=>'false',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Merci de renseigner ce champ',
@@ -93,15 +98,71 @@ class SortieFormType extends AbstractType
                 ]
             ])
 
-            ->add('sortieLieu', LieuSortieFormType::class, [
+            ->add('ville', EntityType::class, [
+                'class'       => 'App\Entity\Ville',
+                'placeholder' => 'Sélectionnez votre ville',
+                'mapped'      => false,
+                'required'    => false
+            ]);
+
+
+            $builder->get('ville')->addEventListener(
+                FormEvents::POST_SUBMIT,
+                function (FormEvent $event) {
+                    $form = $event->getForm();
+                    $this->addLieuField($form->getParent(), $form->getData());
+                }
+            );
+
+            $builder->addEventListener(
+                FormEvents::POST_SET_DATA,
+                function (FormEvent $event) {
+                    $data = $event->getData();
+                    /* @var $lieu Lieu */
+                    $lieu = $data->getSortieLieu();
+                    $form = $event->getForm();
+                    if ($lieu) {
+                        // On récupère le département et la région
+                        $ville = $lieu->getLieuVille();
+                        // On crée le champs supplémentaires
+                        $this->addLieuField($form, $ville);;
+                        // On set les données
+                        $form->get('ville')->setData($ville);
+                        $form->get('lieu')->setData($lieu);
+                    } else {
+                        // On crée les 2 champs en les laissant vide (champs utilisé pour le JavaScript)
+                        $this->addLieuField($form, null);
+                    }
+                }
+            );
+            /*->add('sortieLieu', LieuSortieFormType::class, [
+                'label'=>false,
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Merci de choisir un lieu',
                     ]),
                 ]
-            ])
+            ])*/
         ;
     }
+
+    private function addLieuField(FormInterface $form, Ville $ville)
+    {
+        $builder = $form->getConfig()->getFormFactory()->createNamedBuilder(
+            'lieu',
+            EntityType::class,
+            null,
+            [
+                'class'           => 'App\Entity\Ville',
+                'placeholder'     => $ville ? 'Sélectionnez votre lieu' : 'Sélectionnez votre ville',
+                'mapped'          => false,
+                'required'        => false,
+                'auto_initialize' => false,
+                'choices'         => $ville ? $ville->getVilleLieux() : []
+            ]
+        );
+    }
+
 
     public function configureOptions(OptionsResolver $resolver)
     {

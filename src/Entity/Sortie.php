@@ -7,6 +7,7 @@ use App\Repository\SortieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use PhpParser\Node\Expr\Cast\Object_;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -37,12 +38,11 @@ class Sortie
     private $duree;
 
     /**
-     * @ORM\Column(type="date")
-     * @Assert\Date()
+     * @ORM\Column(type="datetime")
      * @Assert\LessThan(propertyPath="dateHeureDebut")
      */
 
-    protected $dateLimiteInscription;
+    private $dateLimiteInscription;
 
     /**
      * @ORM\Column(type="integer")
@@ -67,12 +67,35 @@ class Sortie
      *
      * --lisaison unidirectionnelle de Sortie vers Lieu
      *
-     * @ORM\ManyToOne(targetEntity=Lieu::class, inversedBy="lieuSorties")
+     * @ORM\ManyToOne(targetEntity=Lieu::class, inversedBy="lieuSorties", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      *
      *
      */
     private $sortieLieu;
+
+    /**
+     *
+     *
+     * @ORM\Column(type="object", nullable=true)
+     */
+    private $ville;
+
+    /**
+     * @return mixed
+     */
+    public function getVille(): ?object
+    {
+        return $this->ville;
+    }
+
+    /**
+     * @param mixed $ville
+     */
+    public function setVille(?object $ville): self
+    {
+        $this->ville = $ville;
+    }
 
     /**
      * @ORM\ManyToOne(targetEntity=Participant::class, inversedBy="sortiesOrganisees")
