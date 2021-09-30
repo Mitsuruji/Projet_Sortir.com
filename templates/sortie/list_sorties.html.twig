@@ -4,10 +4,6 @@
 
 {% block body %}
     <div id="formSearch">
-        <h5 style="float: right">
-            Date du jour : {{ "now"|date("d/m/Y") }}
-        </h5>
-
         <div class="form-listSerie">
             {% include 'sortie/searchOptions.html.twig' with {searchSortiesForm:searchSortiesForm} only%}
         </div>
@@ -18,7 +14,7 @@
             <th>Nom de la sortie</th>
             <th>Date de la sortie</th>
             <th>Clôture</th>
-            <th>Inscrits/Places</th>
+            <th>Inscrits / Places</th>
             <th>Etat</th>
             <th>Inscrit</th>
             <th>Organisateur</th>
@@ -41,7 +37,13 @@
                         {% endif %}
                     {% endfor %}
                 </td>
-                <td><a href="{{ path('participant_details', {'id': sortie.participantOrganisateur.id}) }}">{{ sortie.participantOrganisateur.username }}</a></td>
+                <td>
+                    {% if sortie.participantOrganisateur.username == 'null' %}
+                        <a href="#">Devenir organisateur</a>
+                    {% else %}
+                        <a href="{{ path('participant_details', {'id': sortie.participantOrganisateur.id}) }}">{{ sortie.participantOrganisateur.username }}</a>
+                    {% endif %}
+                </td>
                 <td>
                     {% if app.user.username == sortie.participantOrganisateur.username or is_granted("ROLE_ADMIN")%}
                         {% if sortie.etat.id != '6' and sortie.etat.id != '5' %}
@@ -54,13 +56,13 @@
                         <a href="{{ path('sortie_detail', {'idSortie': sortie.id}) }}" title="Afficher sortie">Afficher</a>
                     {% endif %}
 
-                    {% if inscritBool == true and (sortie.etat.id != '5' and sortie.etat.id != '6') %}
+                    {% if inscritBool == true and (sortie.etat.id != '5' and sortie.etat.id != '6')%}
                         - <a href="{{ path('sortie_se_desister', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}" title="Se desister sortie">Se désister</a>
-                    {% elseif sortie.etat.id != '5' and sortie.etat.id != '6' and sortie.etat.id != '3' %}
+                    {% elseif sortie.etat.id != '5' and sortie.etat.id != '6' and sortie.etat.id != '3' and sortie.participantOrganisateur.username != 'null'%}
                         - <a href="{{ path('sortie_inscription', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}" title="S'incrire sortie">S'inscrire</a>
                     {% endif %}
 
-                    {% if sortie.participantInscrit.count == sortie.nbInscriptionsMax or sortie.etat.id == '3'%}
+                    {% if sortie.participantInscrit.count == sortie.nbInscriptionsMax or sortie.etat.id == '3' or sortie.participantOrganisateur.username == 'null' %}
                         - <span id="sortieFermée">Fermée!</span>
                     {% endif %}
                 </td>

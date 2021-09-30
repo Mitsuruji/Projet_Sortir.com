@@ -83,6 +83,8 @@ class SortieController extends AbstractController
         $campusActuelle = $participantActuelle->getCampus();
         $sortie->setCampusOrganisateur($campusActuelle);
 
+        $etat = $entityManager->getReference('App:Etat','2');
+        $sortie->setEtat($etat);
 
         if($sortieForm->isSubmitted() && $sortieForm->isValid()){
             $entityManager->persist($sortie);
