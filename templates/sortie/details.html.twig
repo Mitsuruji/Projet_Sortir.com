@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-
+    Details d'une sortie | {{ parent() }}
 {% endblock %}
 
 {% block body %}
@@ -19,8 +19,8 @@
                 Non renseignée.
             {% else %}
                 <textarea>
-                         {{ sortie.infosSortie }}
-                     </textarea>
+                    {{ sortie.infosSortie }}
+                </textarea>
             {% endif %}
             <b>Etat:</b> {{ sortie.etat.libelle }}
         </div>

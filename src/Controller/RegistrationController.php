@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Participant;
 use App\Form\RegistrationFormType;
+use App\Services\CheckDeviceFromUser;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,8 +17,15 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register", name="app_register")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function register(Request $request,
+                             UserPasswordEncoderInterface $passwordEncoder,
+                             CheckDeviceFromUser $device): Response
     {
+        $userDevice = $device->checkDeviceFromUser($request);
+        if ($userDevice == 'isMobile') {
+            return $this->redirectToRoute('sortie_search');
+        }
+
         $user = new Participant();
 
         //init champs hors formulaire

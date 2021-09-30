@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Services\CheckDeviceFromUser;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -12,8 +14,11 @@ class SecurityController extends AbstractController
     /**
      * @Route("/login", name="app_login")
      */
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(AuthenticationUtils $authenticationUtils,
+                          CheckDeviceFromUser $device,
+                          Request $request): Response
     {
+        $userDevice = $device->checkDeviceFromUser($request);
         // if ($this->getUser()) {
         //     return $this->redirectToRoute('target_path');
         // }
@@ -27,7 +32,14 @@ class SecurityController extends AbstractController
             $this->addFlash('warning', 'Erreur de login');
         }
 
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        if ($userDevice == 'isMobile') {
+            return $this->render('security/login_mobile.html.twig',
+                ['last_username' => $lastUsername, 'error' => $error]);
+        }
+        else {
+            return $this->render('security/login.html.twig',
+                ['last_username' => $lastUsername, 'error' => $error]);
+        }
     }
 
     /**

@@ -33,6 +33,17 @@ header h1{
     font-weight: bold;
 }
 
+#logo_mobile{
+    max-height: 40px;
+    margin-left: 0.3em;
+}
+#titre_mobile{
+    color: #f36f3a;
+    font-family: 'Birthstone', cursive;
+    font-weight: bold;
+    font-size: xxx-large;
+}
+
 /* ----------------------nav---------------------- */
 nav a{
 
@@ -41,9 +52,22 @@ nav a{
     text-shadow: black 1px 1px;
 }
 nav{
+    display: flex;
     margin-bottom: 2em;
     padding-bottom: 1em;
     text-align: end;
+}
+
+.nav_mobile a{
+
+    padding-right: 5%;
+    color: #f36f3a;
+    text-shadow: black 1px 1px;
+}
+.nav_mobile{
+    margin-bottom: 2em;
+    padding-bottom: 1em;
+    text-align: center;
 }
 
 
@@ -88,14 +112,11 @@ h1{
 
 /* formulaire*/
 form{
-    display: block;
+        display: block;
     max-width: 40%;
     /*box-sizing: border-box;*/
-
-
-
-
 }
+
 #formLogin,
 #formSortie,
 #formUpdate,
@@ -156,6 +177,9 @@ table{
     max-width: 200px;
 }
 
+.tableListSortie {
+    overflow-x: auto;
+}
 table,
 th,
 td{
@@ -189,6 +213,14 @@ th{
     padding: 20px 0;
 }
 
+.detailSortieBlocMobile{
+    display: grid;
+    order: 2;
+    width: 85%;
+    padding-right: 2%;
+    justify-content: center;
+}
+
 .detailSortieBloc1{
     display: grid;
     order: 2;
@@ -211,6 +243,7 @@ th{
 
 .detailSortieTableau{
     justify-content: center;
+    align-self: center;
     display: grid;
     order: 4;
     width: 50%;
@@ -277,4 +310,107 @@ footer{
 #logofooter{
     max-height: 20px;
 
+}
+
+/*media queries*/
+@media screen and (max-width: 800px){
+    form{
+        display: block;
+        max-width: 100%;
+        margin: 0;
+        /*box-sizing: border-box;*/
+    }
+
+    .form-listSerie{
+        display: block;
+        justify-content: unset;
+        align-items: unset;
+        margin-bottom: 1rem;
+    }
+
+    .form-listSerie1 {
+        display: block;
+        float: left;
+        flex-flow: unset;
+        width: 45%;
+        max-width: 45%;
+        margin: 0;
+        overflow:hidden;
+        /*padding: 0 5%;*/
+
+    }
+
+    .form-listSerie2 {
+        float: right;
+        display: block;
+        flex-flow: unset;
+        width: 45%;
+        max-width: 45%;
+        /*padding: 0 5%;*/
+        margin: 0;
+        overflow:hidden;
+    }
+
+    .form-listSerie2 div{
+        display: flex;
+        padding: 0;
+        justify-content: left;
+        margin-bottom: 0.5rem;
+    }
+    .form-listSerie2 div input{
+        margin: 0.5rem 0;
+    }
+
+    .form-listSerie2 div label{
+        padding-left: 10px;
+    }
+
+    .form-listSerie button{
+        align-items: unset;
+        float: right;
+        padding: 10px;
+    }
+
+    nav a{
+        margin-right: 5%;
+        color: #f36f3a;
+        text-shadow: black 1px 1px;
+    }
+    nav{
+        display: grid;
+        margin-bottom: 2em;
+        padding-bottom: 1em;
+        text-align: center;
+    }
+
+    #container{
+        display: grid;
+        width: 100vh;
+        align-self: center;
+        margin-top: 2em;
+    }
+    #detailsParticipant{
+        padding: 1rem;
+    }
+    #infosParticipant{
+        flex-direction: column;
+    }
+
+    #tableInfos {
+        margin-top: 1rem;
+        height: unset;
+        border: none;
+    }
+
+    table[id="tableInfos"] tr{
+
+    }
+
+    table[id="tableInfos"] td{
+        border: none;
+    }
+
+    body {
+        background-attachment: scroll;
+    }
 }

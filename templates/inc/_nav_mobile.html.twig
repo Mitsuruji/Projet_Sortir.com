@@ -1,0 +1,16 @@
+<nav class="nav_mobile">
+    {% if app.user %}
+        {% if app.user.actif != false %}
+
+            <a href="{{ path('sortie_search') }}" title="Liste sorties">Liste sorties</a>
+            <a href="{{ path('app_logout') }}" title="Logout">Se déconnecter  ({{ app.user.username }})</a>
+
+        {% else %}
+            <a href="#" title="Contact">Contact ENI: contact.sortie@eni.fr | Telephone ENI: 0123456789</a>
+            <a href="{{ path('app_logout') }}" title="Logout">Se déconnecter  ({{ app.user.username }})</a>
+        {% endif %}
+
+    {% else %}
+        <a href="{{ path('app_login') }}" title="Login">Se connecter</a>
+    {% endif %}
+</nav>

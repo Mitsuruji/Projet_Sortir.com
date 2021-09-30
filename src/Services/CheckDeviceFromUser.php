@@ -8,19 +8,18 @@ use Symfony\Component\HttpFoundation\Request;
 
 class CheckDeviceFromUser
 {
-    public function checkDeviceFromUser(Request $request):string {
+    public function checkDeviceFromUser():string {
 
 
         if (!class_exists('Mobile_Detect')) { return 'isClassic'; }
 
-        $userAgent = $request->headers->get('User-Agent');
         $detect = new Mobile_Detect;
 
-        if ($detect->isMobile($userAgent)){
-            return 'isMobile';
+        if ($detect->isTablet()){
+            return 'isClassic';
         }
-        elseif ($detect->isTablet($userAgent)){
-            return 'isTablet';
+        elseif ($detect->isMobile()){
+            return 'isMobile';
         }
         else {
             return 'isClassic';

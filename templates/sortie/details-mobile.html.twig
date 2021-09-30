@@ -1,14 +1,14 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_mobile.html.twig' %}
 
 {% block title %}
-
+    Details d'une sortie | {{ parent() }}
 {% endblock %}
 
 {% block body %}
     <div class="detailSortieMain">
         <h2 class="detailSortieTitle">Afficher une sortie</h2>
 
-        <div class="detailSortieBloc1">
+        <div class="detailSortieBlocMobile">
             <div><b>Nom de la sortie:</b> {{ sortie.nom }}</div>
             <div><b>Date de la sortie:</b> {{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</div>
             <div><b>Date limite d'inscription:</b> {{ sortie.dateLimiteInscription|date('d/m/Y H:i:s') }}</div>
@@ -19,8 +19,8 @@
                 Non renseignée.
             {% else %}
                 <textarea>
-                         {{ sortie.infosSortie }}
-                     </textarea>
+                    {{ sortie.infosSortie }}
+                </textarea>
             {% endif %}
             <b>Etat:</b> {{ sortie.etat.libelle }}
 
@@ -41,11 +41,11 @@
                 {% else %}
                     {{ sortie.sortieLieu.longitude }}
                 {% endif %}</div>
-
+        </div>
         <br><br>
 
         <div class="detailSortieTableau">
-            <h4>Liste des participants inscris:</h4>
+            <h4 style="text-align: center">Liste des participants inscris:</h4>
             <table>
                 <thead>
                 <tr>
@@ -56,7 +56,7 @@
                 <tbody>
                 {% for participant in sortie.participantInscrit %}
                     <tr>
-                        <td><a href="{{ path('participant_details', {'id': participant.id}) }}">{{ participant.username }}</a></td>
+                        <td>{{ participant.username }}</td>
                         <td>{{ participant.nom }}</td>
                     </tr>
                 {% endfor %}

@@ -20,13 +20,12 @@ class ParticipantController extends AbstractController
      */
     public function detailsParticipant(int $id,
                                        ParticipantRepository $participantRepository,
-                                       Request $request,
                                        CheckDeviceFromUser $device): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        $userDevice = $device->checkDeviceFromUser($request);
+        $userDevice = $device->checkDeviceFromUser();
 
         if ($userDevice == 'isMobile') {
             return $this->redirectToRoute('sortie_search');
@@ -53,7 +52,7 @@ class ParticipantController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        $userDevice = $device->checkDeviceFromUser($request);
+        $userDevice = $device->checkDeviceFromUser();
 
         if ($userDevice == 'isMobile') {
             return $this->redirectToRoute('sortie_search');
@@ -152,7 +151,7 @@ class ParticipantController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        $userDevice = $device->checkDeviceFromUser($request);
+        $userDevice = $device->checkDeviceFromUser();
 
         if ($userDevice == 'isMobile') {
             return $this->redirectToRoute('sortie_search');
@@ -219,14 +218,13 @@ class ParticipantController extends AbstractController
      */
     public function supprimerPhoto(int $id,
                                    ParticipantRepository $participantRepository,
-                                   CheckDeviceFromUser $device,
-                                   Request $request): Response
+                                   CheckDeviceFromUser $device): Response
     {
 
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        $userDevice = $device->checkDeviceFromUser($request);
+        $userDevice = $device->checkDeviceFromUser();
 
         if ($userDevice == 'isMobile') {
             return $this->redirectToRoute('sortie_search');
