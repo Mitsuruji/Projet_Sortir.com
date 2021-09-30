@@ -38,7 +38,8 @@ class CheckEtatAndUpdate
             }
 
             //etat: Activité en cours
-            elseif ($sortie->getEtat()->getId() !==4 && $now >= $sortie->getDateHeureDebut()){
+            elseif (($sortie->getEtat()->getId() === 3 or $sortie->getEtat()->getId() === 2)
+                && $now >= $sortie->getDateHeureDebut()){
                 $etatTermine = $entityManager->getReference('App:Etat', '4');
                 $sortie->setEtat($etatTermine);
                 $entityManager->persist($sortie);

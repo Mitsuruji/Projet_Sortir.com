@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block body %}
+    <div class="detailSortieMain">
+        <h2 class="detailSortieTitle">Afficher une sortie</h2>
+
+        <div class="detailSortieBloc1">
+            <div><b>Nom de la sortie:</b> {{ sortie.nom }}</div>
+            <div><b>Date de la sortie:</b> {{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</div>
+            <div><b>Date limite d'inscription:</b> {{ sortie.dateLimiteInscription|date('d/m/Y H:i:s') }}</div>
+            <div><b>Nombre de places:</b> {{ sortie.nbInscriptionsMax}}</div>
+            <div><b>Durée</b> {{ sortie.duree|date('H:i:s') }}</div>
+            <b>Description et infos:</b>
+            {% if sortie.infosSortie is same as null %}
+                Non renseignée.
+            {% else %}
+                <textarea>
+                         {{ sortie.infosSortie }}
+                     </textarea>
+            {% endif %}
+            <b>Etat:</b> {{ sortie.etat.libelle }}
+
+
+            <div><b>Campus:</b> {{ sortie.campusOrganisateur.nom }}</div>
+            <div><b>Lieu:</b> {{ sortie.sortieLieu.nom }}</div>
+            <div><b>Rue:</b> {{ sortie.sortieLieu.rue }}</div>
+            <div><b>Code postal:</b> {{ sortie.sortieLieu.lieuVille.codePostal }}, {{ sortie.sortieLieu.lieuVille.nom }}</div>
+            <div><b>Lattitude:</b>
+                {% if sortie.sortieLieu.latitude is same as null %}
+                    Non renseignée.
+                {% else %}
+                    {{ sortie.sortieLieu.latitude }}
+                {% endif %}</div>
+            <div><b>Longitude:</b>
+                {% if sortie.sortieLieu.longitude is same as null %}
+                    Non renseignée.
+                {% else %}
+                    {{ sortie.sortieLieu.longitude }}
+                {% endif %}</div>
+
+        <br><br>
+
+        <div class="detailSortieTableau">
+            <h4>Liste des participants inscris:</h4>
+            <table>
+                <thead>
+                <tr>
+                    <th>Pseudo</th>
+                    <th>Nom</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for participant in sortie.participantInscrit %}
+                    <tr>
+                        <td><a href="{{ path('participant_details', {'id': participant.id}) }}">{{ participant.username }}</a></td>
+                        <td>{{ participant.nom }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+
+

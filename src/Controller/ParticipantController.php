@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Participant;
 use App\Form\RegistrationFormType;
 use App\Repository\ParticipantRepository;
+use App\Services\CheckDeviceFromUser;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,11 +18,19 @@ class ParticipantController extends AbstractController
     /**
      * @Route("/participant/details/{id}", name="participant_details")
      */
-    public function detailsParticipant(int $id, ParticipantRepository $participantRepository): Response
+    public function detailsParticipant(int $id,
+                                       ParticipantRepository $participantRepository,
+                                       Request $request,
+                                       CheckDeviceFromUser $device): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_USER');
 
+        $userDevice = $device->checkDeviceFromUser($request);
+
+        if ($userDevice == 'isMobile') {
+            return $this->redirectToRoute('sortie_search');
+        }
         $participant = $participantRepository->find($id);
 
         //gestion erreur
@@ -36,10 +45,19 @@ class ParticipantController extends AbstractController
     /**
      * @Route("/participant/details/{id}/update", name="participant_update")
      */
-    public function updateDetails(int $id, EntityManagerInterface $entityManager, Request $request): Response
+    public function updateDetails(int $id,
+                                  EntityManagerInterface $entityManager,
+                                  Request $request,
+                                  CheckDeviceFromUser $device): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $userDevice = $device->checkDeviceFromUser($request);
+
+        if ($userDevice == 'isMobile') {
+            return $this->redirectToRoute('sortie_search');
+        }
 
         //récupération du participant à modifier dans la bdd
         $participant= $entityManager->getRepository(Participant::class)->find($id);
@@ -124,11 +142,22 @@ class ParticipantController extends AbstractController
     /**
      * @Route("/participant/details/{id}/updatePassword", name="participant_updatePassword")
      */
-    public function updatePassword(int $id, EntityManagerInterface $entityManager, Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function updatePassword(int $id,
+                                   EntityManagerInterface $entityManager,
+                                   Request $request,
+                                   UserPasswordEncoderInterface $passwordEncoder,
+                                   CheckDeviceFromUser $device): Response
     {
 
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $userDevice = $device->checkDeviceFromUser($request);
+
+        if ($userDevice == 'isMobile') {
+            return $this->redirectToRoute('sortie_search');
+        }
+
 
         //récupération du participant à modifier dans la bdd
         $participant= $entityManager->getRepository(Participant::class)->find($id);
@@ -188,11 +217,20 @@ class ParticipantController extends AbstractController
     /**
      * @Route("/participant/details/{id}/supprimerPhoto", name="participant_supprimerPhoto")
      */
-    public function supprimerPhoto(int $id, ParticipantRepository $participantRepository): Response
+    public function supprimerPhoto(int $id,
+                                   ParticipantRepository $participantRepository,
+                                   CheckDeviceFromUser $device,
+                                   Request $request): Response
     {
 
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $userDevice = $device->checkDeviceFromUser($request);
+
+        if ($userDevice == 'isMobile') {
+            return $this->redirectToRoute('sortie_search');
+        }
 
         $participant = $participantRepository->find($id);
 

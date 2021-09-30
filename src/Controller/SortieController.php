@@ -62,10 +62,15 @@ class SortieController extends AbstractController
     /**
      * @Route("/create/sortieForm", name="create_sortieForm")
      */
-    public function createSortieForm(Request $request, EntityManagerInterface $entityManager): Response
+    public function createSortieForm(Request $request,
+                                     EntityManagerInterface $entityManager,
+                                     CheckDeviceFromUser $device): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_USER');
+        $userDevice = $device->checkDeviceFromUser($request);
+
+
         $user = $this->getUser()->getId();
         $sortie =new Sortie();
         $sortieForm= $this->createForm(SortieFormType::class, $sortie);
@@ -87,28 +92,45 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('sortie_search');
         }
 
-        return $this->render('sortie/create.html.twig', [
-            'sortieForm'=>   $sortieForm->createView()
+        if ($userDevice == 'isMobile') {
+            return $this->render('sortie/details-mobile.html.twig', [
+                'sortie' => $sortie,
+            ]);
+        }
+        else {
+            return $this->render('sortie/create.html.twig', [
+                'sortieForm' => $sortieForm->createView()
 
-        ]);
+            ]);
+        }
     }
 
 
     /**
      * @Route("/detailSortie/{idSortie}", name="sortie_detail")
      */
-    public function detailSortie(int $idSortie, SortieRepository $sortieRepository,
-                           Request $request,
-                           EntityManagerInterface $entityManager): Response
+    public function detailSortie(int $idSortie,
+                                 SortieRepository $sortieRepository,
+                                 Request $request,
+                                 EntityManagerInterface $entityManager,
+                                 CheckDeviceFromUser $device): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_USER');
         try {
             $sortie = $sortieRepository->find($idSortie);
+            $userDevice = $device->checkDeviceFromUser($request);
 
-            return $this->render('sortie/details.html.twig', [
-                'sortie' => $sortie
-            ]);
+            if ($userDevice == 'isMobile') {
+                return $this->render('sortie/details-mobile.html.twig', [
+                    'sortie' => $sortie,
+                ]);
+            }
+            else {
+                return $this->render('sortie/details.html.twig', [
+                    'sortie' => $sortie
+                ]);
+            }
         }
         catch (\Exception $e) {
             $this->addFlash('warning', $e->getMessage());
@@ -122,7 +144,8 @@ class SortieController extends AbstractController
     public function inscriptionSortie(int $idParticipant,int $idSortie,
                                       ParticipantRepository $participantRepository,
                                       EntityManagerInterface $entityManager,
-                                      Request $request): Response
+                                      Request $request,
+                                      CheckDeviceFromUser $device): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -130,6 +153,11 @@ class SortieController extends AbstractController
         try {
             //récupération instance Participant et Sortie
             $sortie = $entityManager->getRepository(Sortie::class)->find($idSortie);
+            $userDevice = $device->checkDeviceFromUser($request);
+
+            if ($userDevice == 'isMobile') {
+                return $this->redirectToRoute('sortie_search');
+            }
 
 
             //validation date de cloture
@@ -162,6 +190,7 @@ class SortieController extends AbstractController
 
             return $this->redirectToRoute('sortie_search');
 
+
         } catch (\Exception $e) {
             $this->addFlash('warning', $e->getMessage());
             return $this->redirectToRoute('sortie_search');
@@ -171,7 +200,11 @@ class SortieController extends AbstractController
     /**
      * @Route("/sortie/{idSortie}_{idParticipant}/sedesister", name="sortie_se_desister")
      */
-    public function seDesisterSortie(int $idParticipant,int $idSortie, ParticipantRepository $participantRepository, EntityManagerInterface $entityManager): Response
+    public function seDesisterSortie(int $idParticipant,int $idSortie,
+                                     ParticipantRepository $participantRepository,
+                                     EntityManagerInterface $entityManager,
+                                     Request $request,
+                                     CheckDeviceFromUser $device): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -179,6 +212,11 @@ class SortieController extends AbstractController
         try {
             //récupération instance Participant et Sortie
             $sortie = $entityManager->getRepository(Sortie::class)->find($idSortie);
+            $userDevice = $device->checkDeviceFromUser($request);
+
+            if ($userDevice == 'isMobile') {
+                return $this->redirectToRoute('sortie_search');
+            }
 
             if ($sortie->getParticipantInscrit()->count() <= 0){
                 $this->addFlash('warning', 'Aucun inscrit sur cette sortie');
@@ -218,12 +256,20 @@ class SortieController extends AbstractController
         int $idSortie,
         SortieRepository $sortieRepository,
         Request $request,
-        EntityManagerInterface $entityManager): Response
+        EntityManagerInterface $entityManager,
+        CheckDeviceFromUser $device): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         try {
+
+            $userDevice = $device->checkDeviceFromUser($request);
+
+            if ($userDevice == 'isMobile') {
+                return $this->redirectToRoute('sortie_search');
+            }
+
             //récupération instance Sortie
             $sortie = $sortieRepository->find($idSortie);
             if ($this->getUser() !== $sortie->getParticipantOrganisateur() and !$this->isGranted("ROLE_ADMIN")) {
