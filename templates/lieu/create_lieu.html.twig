@@ -5,15 +5,40 @@
 {% endblock %}
 
 {% block body %}
+    <h1>Nouveau lieu</h1>
     <div>
         {{ form_start(lieuSortieForm) }}
-        {{ form_row(lieuSortieForm.nom) }}
-        {{ form_row(lieuSortieForm.rue) }}
-        {{ form_row(lieuSortieForm.lieuVille) }}
-        {{ form_row(lieuSortieForm.latitude) }}
-        {{ form_row(lieuSortieForm.longitude) }}
+
         <div>
-            <input type="submit" value="Enregistrer le nouveau lieu" >
+            {{ form_label(lieuSortieForm.lieuVille) }}
+            {{ form_errors(lieuSortieForm.lieuVille) }}
+            {{ form_widget(lieuSortieForm.lieuVille) }}
+        </div>
+
+        <div>
+            {{ form_label(lieuSortieForm.nom) }}
+            {{ form_errors(lieuSortieForm.nom) }}
+            {{ form_widget(lieuSortieForm.nom) }}
+        </div>
+        <div>
+            {{ form_label(lieuSortieForm.rue) }}
+            {{ form_errors(lieuSortieForm.rue) }}
+            {{ form_widget(lieuSortieForm.rue) }}
+        </div>
+
+        <div>
+            {{ form_label(lieuSortieForm.latitude) }}
+            {{ form_errors(lieuSortieForm.latitude) }}
+            {{ form_widget(lieuSortieForm.latitude) }}
+        </div>
+        <div>
+            {{ form_label(lieuSortieForm.longitude) }}
+            {{ form_errors(lieuSortieForm.longitude) }}
+            {{ form_widget(lieuSortieForm.longitude) }}
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-success" value="Create">Créer un lieu</button>
         </div>
         {{ form_end(lieuSortieForm) }}
     </div>

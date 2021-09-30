@@ -2,41 +2,40 @@
 
 namespace App\Controller;
 
-
-use App\Entity\Lieu;
-use App\Controller\VilleController;
-use App\Form\LieuSortieFormType;
+use App\Entity\Ville;
+use App\Form\VilleSortieType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 
-class LieuController extends AbstractController
+
+class VilleController extends AbstractController
 {
+
     /**
-     * @Route("/create/Lieu", name="create_lieu")
+     * @Route("/create/Ville", name="create_ville")
      */
     public function lieuSortieForm(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $lieu =new Lieu();
-        $lieuSortieForm= $this->createForm(LieuSortieFormType::class, $lieu);
+        $ville =new Ville();
+        $villeSortie= $this->createForm(VilleSortieType::class, $ville);
 
-        $lieuSortieForm->handleRequest($request);
+        $villeSortie->handleRequest($request);
 
 
-        if($lieuSortieForm->isSubmitted() && $lieuSortieForm->isValid()){
-            $entityManager->persist($lieu);
+        if($villeSortie->isSubmitted() && $villeSortie->isValid()){
+            $entityManager->persist($ville);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Le lieu a bien été créé');
+            $this->addFlash('success', 'La ville a bien été créé');
             return $this->render('sortie/create.html.twig');
         }
 
         return $this->render('lieu/create_lieu.html.twig', [
-            'lieuSortieForm'=>   $lieuSortieForm->createView()
+            'villeSortie'=>   $villeSortie->createView()
 
         ]);
     }
-
 }

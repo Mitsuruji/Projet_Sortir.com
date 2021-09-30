@@ -19,10 +19,10 @@ class LieuRepository extends ServiceEntityRepository
         parent::__construct($registry, Lieu::class);
     }
 
-    // /**
-    //  * @return Lieu[] Returns an array of Lieu objects
-    //  */
-    /*
+    /**
+     * Returns an array of Lieu objects
+    */
+
     public function findByExampleField($value)
     {
         return $this->createQueryBuilder('l')
@@ -34,7 +34,7 @@ class LieuRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-    */
+
 
     /*
     public function findOneBySomeField($value): ?Lieu

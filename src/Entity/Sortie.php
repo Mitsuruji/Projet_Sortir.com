@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
+use App\Entity\Lieu;
 use App\Repository\SortieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=SortieRepository::class)
@@ -27,7 +29,7 @@ class Sortie
     /**
      * @ORM\Column(type="datetime")
      */
-    private $dateHeureDebut;
+    protected $dateHeureDebut;
 
     /**
      * @ORM\Column(type="time")
@@ -35,9 +37,12 @@ class Sortie
     private $duree;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="date")
+     * @Assert\Date()
+     * @Assert\LessThan(propertyPath="dateHeureDebut")
      */
-    private $dateLimiteInscription;
+
+    protected $dateLimiteInscription;
 
     /**
      * @ORM\Column(type="integer")
@@ -55,8 +60,17 @@ class Sortie
     private $etat;
 
     /**
+     *
+     * @var Lieu
+     * @Assert\Valid()
+     * @Assert\Type(type="App\Entity\Lieu")
+     *
+     * --lisaison unidirectionnelle de Sortie vers Lieu
+     *
      * @ORM\ManyToOne(targetEntity=Lieu::class, inversedBy="lieuSorties")
      * @ORM\JoinColumn(nullable=false)
+     *
+     *
      */
     private $sortieLieu;
 

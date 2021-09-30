@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Campus;
-use App\Entity\Participant;
 use App\Entity\Sortie;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -15,11 +14,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
-
-class SortieFormType extends AbstractType
+class ModifierSortieType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -44,9 +42,10 @@ class SortieFormType extends AbstractType
             ])
 
             ->add('dateLimiteInscription', DateType::class, [
-                'label'=>'Date limite d\'inscription * :',
+                'label'=>"Date limite d'inscription* :",
                 'widget' => 'single_text',
                 'constraints' => [
+
                     new NotBlank([
                         'message' => 'Merci de renseigner une date valide',
                     ]),
@@ -107,7 +106,7 @@ class SortieFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Sortie::class,
-            'method'=> 'POST',
+            'method' => 'GET'
         ]);
     }
 }

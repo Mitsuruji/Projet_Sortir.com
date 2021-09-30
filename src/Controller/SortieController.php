@@ -75,6 +75,7 @@ class SortieController extends AbstractController
         $sortie =new Sortie();
         $sortieForm= $this->createForm(SortieFormType::class, $sortie);
 
+
         $sortieForm->handleRequest($request);
 
         $participantActuelle = $entityManager->getReference('App:Participant',$user);
@@ -87,10 +88,13 @@ class SortieController extends AbstractController
         $sortie->setEtat($etat);
 
         if($sortieForm->isSubmitted() && $sortieForm->isValid()){
+            $sortieForm->get('bouton')->getData();
+            dd($sortieForm->get('bouton')->getData());
+
             $entityManager->persist($sortie);
             $entityManager->flush();
 
-            $this->addFlash('succes', 'La sortie a bien été créé');
+            $this->addFlash('success', 'La sortie a bien été créé');
             return $this->redirectToRoute('sortie_search');
         }
 
