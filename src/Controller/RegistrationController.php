@@ -27,28 +27,31 @@ class RegistrationController extends AbstractController
         }
 
         $user = new Participant();
+        $form = $this->createForm(RegistrationFormType::class, $user);
 
-        //init champs hors formulaire
+        //hydratation des champs hors formulaire
         $user->setRoles(["ROLE_USER"]);
         $user->setAdministrateur(false);
         $user->setActif(true);
 
-        $form = $this->createForm(RegistrationFormType::class, $user);
-
         //gestion option inscription suivant ROLE_ADMIN
         $admin = $this->isGranted("ROLE_ADMIN");
+
         if (!$admin){
+            //suppression de l'affichage d'options
             $form->remove('administrateur');
             $form->remove('actif');
+
             $form->handleRequest($request);
         }
         else{
             $form->handleRequest($request);
 
-            //donne role admin au nouvel inscrit si case admin coché
+            //donne ROLE_ADMIN si case administrateur coché
             if ($form->get('administrateur')->getData() == true){
                 $user->setRoles(["ROLE_ADMIN"]);
             }
+            //enleve ROLE_USER si case actif non coché
             if ($form->get('actif')->getData() == false) {
                 $user->setRoles(["ROLE_INACTIF"]);
             }

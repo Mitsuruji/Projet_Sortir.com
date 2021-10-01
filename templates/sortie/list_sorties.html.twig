@@ -26,44 +26,50 @@
            </thead>
            <tbody>
             {% for sortie in sorties %}
-                {% set inscritBool = false %}
-                <tr>
-                    <td>{{ sortie.nom }}</td>
-                    <td>{{ sortie.dateHeureDebut|date("d/m/Y H:i") }}</td>
-                    <td>{{ sortie.dateLimiteInscription|date("d/m/Y H:i") }}</td>
-                    <td>{{ sortie.participantInscrit.count }} / {{ sortie.nbInscriptionsMax }}</td>
-                    <td class="etat{{ sortie.etat.id }}">{{ sortie.etat.libelle }}</td>
-                    <td>{% for inscrit in sortie.participantInscrit %}
-                            {% if inscrit.username == app.user.username %}
-                                X
-                                {% set inscritBool = true %}
-                            {% endif %}
-                        {% endfor %}
-                    </td>
-                    <td><a href="{{ path('participant_details', {'id': sortie.participantOrganisateur.id}) }}">{{ sortie.participantOrganisateur.username }}</a></td>
-                    <td>
-                        {% if app.user.username == sortie.participantOrganisateur.username or is_granted("ROLE_ADMIN")%}
-                            {% if sortie.etat.id != '6' and sortie.etat.id != '5' %}
-                                <a href="{{ path('sortie_modifie', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}"  title="Modifier sortie">Modifier</a>
-                                - <a href="{{ path('sortie_annulation', {'idSortie': sortie.id}) }}" title="Annuler sortie">Annuler</a>
-                            {% elseif sortie.etat.id == '6' %}
+                {% if sortie.etat.id != '1' %}
+                    {% set inscritBool = false %}
+                    <tr>
+                        <td>{{ sortie.nom }}</td>
+                        <td>{{ sortie.dateHeureDebut|date("d/m/Y H:i") }}</td>
+                        <td>{{ sortie.dateLimiteInscription|date("d/m/Y") }}</td>
+                        <td>{{ sortie.participantInscrit.count }} / {{ sortie.nbInscriptionsMax }}</td>
+                        <td class="etat{{ sortie.etat.id }}">{{ sortie.etat.libelle }}</td>
+                        <td>{% for inscrit in sortie.participantInscrit %}
+                                {% if inscrit.username == app.user.username %}
+                                    X
+                                    {% set inscritBool = true %}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        {% if sortie.participantOrganisateur.username != 'null' %}
+                            <td><a href="{{ path('participant_details', {'id': sortie.participantOrganisateur.id}) }}">{{ sortie.participantOrganisateur.username }}</a></td>
+                        {% else %}
+                            <td><a href="#">Devenir organisateur</a></td>
+                        {% endif %}
+                        <td>
+                            {% if app.user.username == sortie.participantOrganisateur.username or is_granted("ROLE_ADMIN")%}
+                                {# {% if sortie.etat.id != '6' and sortie.etat.id != '5' and sortie.etat.id != '4'%}
+                                    <a href="{{ path('sortie_modifie', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}"  title="Modifier sortie">Modifier</a>
+                                    - <a href="{{ path('sortie_annulation', {'idSortie': sortie.id}) }}" title="Annuler sortie">Annuler</a>
+                                {% elseif sortie.etat.id == '6' or sortie.etat.id == '4'%} #}
+                                    <a href="{{ path('sortie_detail', {'idSortie': sortie.id}) }}" title="Afficher sortie">Afficher</a>
+                                {# { % endif % }#}
+                            {% else%}
                                 <a href="{{ path('sortie_detail', {'idSortie': sortie.id}) }}" title="Afficher sortie">Afficher</a>
                             {% endif %}
-                        {% else%}
-                            <a href="{{ path('sortie_detail', {'idSortie': sortie.id}) }}" title="Afficher sortie">Afficher</a>
-                        {% endif %}
 
-                        {% if inscritBool == true and (sortie.etat.id != '5' and sortie.etat.id != '6') %}
-                            - <a href="{{ path('sortie_se_desister', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}" title="Se desister sortie">Se désister</a>
-                        {% elseif sortie.etat.id != '5' and sortie.etat.id != '6' and sortie.etat.id != '3' %}
-                            - <a href="{{ path('sortie_inscription', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}" title="S'incrire sortie">S'inscrire</a>
-                        {% endif %}
+                            {% if inscritBool == true and (sortie.etat.id != '5' and sortie.etat.id != '6' and sortie.etat.id != '4') %}
+                                - <a href="{{ path('sortie_se_desister', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}" title="Se desister sortie">Se désister</a>
+                            {% elseif sortie.etat.id != '5' and sortie.etat.id != '6' and sortie.etat.id != '3'  and sortie.etat.id != '4' %}
+                                - <a href="{{ path('sortie_inscription', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}" title="S'incrire sortie">S'inscrire</a>
+                            {% endif %}
 
-                        {% if sortie.participantInscrit.count == sortie.nbInscriptionsMax or sortie.etat.id == '3'%}
-                            - <span id="sortieFermée">Fermée!</span>
-                        {% endif %}
-                    </td>
-                </tr>
+                            {% if sortie.participantInscrit.count == sortie.nbInscriptionsMax or sortie.etat.id == '3' or sortie.etat.id == '4'%}
+                                - <span id="sortieFermée">Fermée!</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
             {% endfor %}
            </tbody>
         </table>

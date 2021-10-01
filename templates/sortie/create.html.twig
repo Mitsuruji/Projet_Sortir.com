@@ -6,7 +6,7 @@
 
 {% block body %}
 
-    <div class="main-create">
+    <div id="formCreate" class="main-create">
         <h1>Créer une sortie</h1>
         {{ form_start(sortieForm) }}
         <div class="createSortie">
@@ -66,23 +66,21 @@
                         src = {{ asset('js/app_create.js') }}></script>
             {% endblock %}
 
-            <div>
-                * : Champs obligatoires
-            </div>
+        </div>
             <div class="create-bloc3">
                 <a href="{{ path('create_sortieForm') }}">
-                    <button type="submit" class="btn btn-primary" value="create" name="bouton_creer">Créer</button>
+                    <button type="submit" class="btn btn-lg btn-primary , boutonSortie" value="create" name="bouton_creer">Créer</button>
                 </a>
                 <a href="{{ path('create_sortieForm') }}">
-                    <button type="submit" class="btn btn-success" value="publish" name="bouton_creer">Publier la sortie</button>
+                    <button type="submit" class="btn btn-lg btn-success , boutonSortie" value="publish" name="bouton_creer">Publier</button>
                 </a>
                  <a href="#">
-                    <button type="reset" class="btn btn-primary" value="Cancel">Annuler</button>
+                    <button type="reset" class="btn btn-lg btn-danger , boutonSortie" value="Cancel">Annuler</button>
                 </a>
 
             </div>
             {{ form_end(sortieForm) }}
-        </div>
+
 
     </div>
 {% endblock %}

@@ -4,13 +4,13 @@
 
 {% block body %}
     <div id="container">
-        <div id="imgParticipant">
-            {% if participant.photo %}
-                <img src="{{ asset('uploads/' ~ participant.photo) }}">
-            {% endif %}
-        </div>
         <div id="detailsParticipant">
             {% if app.user.id == participant.id or is_granted("ROLE_ADMIN")%}
+                <div id="imgParticipant">
+                    {% if participant.photo %}
+                        <img src="{{ asset('uploads/' ~ participant.photo) }}">
+                    {% endif %}
+                </div>
                 <h2>Informations:</h2>
 
                 <div id="infosParticipant">

@@ -35,8 +35,7 @@ class SecurityController extends AbstractController
         if ($userDevice == 'isMobile') {
             return $this->render('security/login_mobile.html.twig',
                 ['last_username' => $lastUsername, 'error' => $error]);
-        }
-        else {
+        } else {
             return $this->render('security/login.html.twig',
                 ['last_username' => $lastUsername, 'error' => $error]);
         }

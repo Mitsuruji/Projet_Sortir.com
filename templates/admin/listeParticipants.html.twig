@@ -7,13 +7,15 @@
 {% block body %}
     {% for participant in participants %}
         <a
-            href="{{ path('participant_details', {'id': participant.id}) }}"
-            class="
-            {% if participant.administrateur == true%}
-                admin
+            {% if participant.username != 'null'%}
+                href="{{ path('participant_details', {'id': participant.id}) }}"
+                class="
+                {% if participant.administrateur == true%}
+                    admin
+                {% endif %}
+            ">
+                {{ participant.username }}
             {% endif %}
-        ">
-            {{ participant.username }}
         </a>
 
     {% endfor %}
