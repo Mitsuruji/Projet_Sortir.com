@@ -29,6 +29,8 @@ class Sortie
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank
+     * @Assert\GreaterThan("now")
      */
     protected $dateHeureDebut;
 
@@ -39,13 +41,16 @@ class Sortie
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank
      * @Assert\LessThan(propertyPath="dateHeureDebut")
+     * @Assert\GreaterThan("now")
      */
 
     private $dateLimiteInscription;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank
      */
     private $nbInscriptionsMax;
 
@@ -73,29 +78,6 @@ class Sortie
      *
      */
     private $sortieLieu;
-
-    /**
-     *
-     *
-     * @ORM\Column(type="object", nullable=true)
-     */
-    private $ville;
-
-    /**
-     * @return mixed
-     */
-    public function getVille(): ?object
-    {
-        return $this->ville;
-    }
-
-    /**
-     * @param mixed $ville
-     */
-    public function setVille(?object $ville): self
-    {
-        $this->ville = $ville;
-    }
 
     /**
      * @ORM\ManyToOne(targetEntity=Participant::class, inversedBy="sortiesOrganisees")
@@ -147,7 +129,7 @@ class Sortie
         return $this->dateHeureDebut;
     }
 
-    public function setDateHeureDebut(\DateTimeInterface $dateHeureDebut): self
+    public function setDateHeureDebut(?\DateTimeInterface $dateHeureDebut): self
     {
         $this->dateHeureDebut = $dateHeureDebut;
 
@@ -159,7 +141,7 @@ class Sortie
         return $this->duree;
     }
 
-    public function setDuree(\DateTimeInterface $duree): self
+    public function setDuree(?\DateTimeInterface $duree): self
     {
         $this->duree = $duree;
 
@@ -171,7 +153,7 @@ class Sortie
         return $this->dateLimiteInscription;
     }
 
-    public function setDateLimiteInscription(\DateTimeInterface $dateLimiteInscription): self
+    public function setDateLimiteInscription(?\DateTimeInterface $dateLimiteInscription): self
     {
         $this->dateLimiteInscription = $dateLimiteInscription;
 

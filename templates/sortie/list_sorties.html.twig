@@ -44,7 +44,7 @@
                     <td>
                         {% if app.user.username == sortie.participantOrganisateur.username or is_granted("ROLE_ADMIN")%}
                             {% if sortie.etat.id != '6' and sortie.etat.id != '5' %}
-                                <a href="#" title="Modifier sortie">Modifier</a>
+                                <a href="{{ path('sortie_modifie', {'idSortie':sortie.id, 'idParticipant':app.user.id}) }}"  title="Modifier sortie">Modifier</a>
                                 - <a href="{{ path('sortie_annulation', {'idSortie': sortie.id}) }}" title="Annuler sortie">Annuler</a>
                             {% elseif sortie.etat.id == '6' %}
                                 <a href="{{ path('sortie_detail', {'idSortie': sortie.id}) }}" title="Afficher sortie">Afficher</a>

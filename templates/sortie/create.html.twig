@@ -1,20 +1,16 @@
 {% extends 'base.html.twig' %}
-{% block javascripts %}
-<script lang= "javascript"
-      src = "https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script lang= "javascript"
-    src = {{ asset('js/app.js') }}></script>
-{% endblock %}
+
 {% block title %}
     Créer une nouvelle sortie
 {% endblock %}
 
 {% block body %}
-    <h1>Créer une sortie</h1>
-    <div>
+
+    <div class="main-create">
+        <h1>Créer une sortie</h1>
         {{ form_start(sortieForm) }}
-        <div id="createSortie">
-            <div>
+        <div class="createSortie">
+            <div class="create-bloc1">
                 <div>
                     {{ form_label(sortieForm.nom) }}
                     {{ form_errors(sortieForm.nom) }}
@@ -46,33 +42,43 @@
                     {{ form_widget(sortieForm.infosSortie) }}
                 </div>
             </div>
-            <div>
+            <div class="create-bloc2">
                 <div>
                     {{ form_label(sortieForm.campusOrganisateur) }}
                     {{ form_errors(sortieForm.campusOrganisateur) }}
                     {{ form_widget(sortieForm.campusOrganisateur) }}
                 </div>
                 <div>
-                    {{ form_label(sortieForm.ville) }}
-                    {{ form_errors(sortieForm.ville) }}
-                    {{ form_widget(sortieForm.ville) }}
+                    {{ form_label(sortieForm.sortieVille) }}
+                    {{ form_errors(sortieForm.sortieVille) }}
+                    {{ form_widget(sortieForm.sortieVille) }}
+                </div>
+                <div>
+                    {{ form_label(sortieForm.sortieLieu) }}
+                    {{ form_errors(sortieForm.sortieLieu) }}
+                    {{ form_widget(sortieForm.sortieLieu) }}
                 </div>
             </div>
-
+            {% block javascripts %}
+                <script lang= "javascript"
+                        src = "https://code.jquery.com/jquery-3.2.1.min.js"></script>
+                <script lang= "javascript"
+                        src = {{ asset('js/app_create.js') }}></script>
+            {% endblock %}
 
             <div>
                 * : Champs obligatoires
             </div>
-            <div>
+            <div class="create-bloc3">
                 <a href="{{ path('create_sortieForm') }}">
-                    <button type="submit" class="btn btn-primary" value="Create" name="bouton">Créer</button>
+                    <button type="submit" class="btn btn-primary" value="create" name="bouton_creer">Créer</button>
                 </a>
                 <a href="{{ path('create_sortieForm') }}">
-                    <button type="submit" class="btn btn-success" value="Publish" name="bouton">Publier la sortie</button>
+                    <button type="submit" class="btn btn-success" value="publish" name="bouton_creer">Publier la sortie</button>
                 </a>
-                {# <a href="{{ }}">
+                 <a href="#">
                     <button type="reset" class="btn btn-primary" value="Cancel">Annuler</button>
-                </a> #}
+                </a>
 
             </div>
             {{ form_end(sortieForm) }}

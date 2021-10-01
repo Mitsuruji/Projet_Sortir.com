@@ -40,7 +40,12 @@ class SortieController extends AbstractController
         $form = $this->createForm(SearchSortiesType::class, $data);
         $form->handleRequest($request);
 
-        $sorties = $sortieRepository->findSearch($data);
+        if ($userDevice == 'isMobile') {
+            $sorties = $sortieRepository->findSearchMobile($data, $userDevice);
+        }
+        else{
+            $sorties = $sortieRepository->findSearch($data);
+        }
 
         // change l'etat de la sortie en fonction de la date
         $checkEtat->checkEtatAndUpdate($sorties, $entityManager);
@@ -70,51 +75,127 @@ class SortieController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_USER');
         $userDevice = $device->checkDeviceFromUser();
 
-
-        $user = $this->getUser()->getId();
-        $sortie =new Sortie();
-        $sortieForm= $this->createForm(SortieFormType::class, $sortie);
-
-
-        $sortieForm->handleRequest($request);
-
-        $participantActuelle = $entityManager->getReference('App:Participant',$user);
-        $sortie->setParticipantOrganisateur($participantActuelle);
-
-        $campusActuelle = $participantActuelle->getCampus();
-        $sortie->setCampusOrganisateur($campusActuelle);
-
-        /*$etat = $entityManager->getReference('App:Etat','2');
-        $sortie->setEtat($etat);*/
-
-        if($sortieForm->isSubmitted() && $sortieForm->isValid()){
-            $boutonValue =$request->request->get("bouton");
-            if ($boutonValue== "Create"){
-                $etat = $entityManager->getReference('App:Etat','1');
-                $sortie->setEtat($etat);
-            }
-            else{
-                 $etat = $entityManager->getReference('App:Etat','2');
-                 $sortie->setEtat($etat);
-            }
-
-            $entityManager->persist($sortie);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'La sortie a bien été créé');
+        if ($userDevice == 'isMobile') {
             return $this->redirectToRoute('sortie_search');
         }
 
-        if ($userDevice == 'isMobile') {
-            return $this->render('sortie/details-mobile.html.twig', [
-                'sortie' => $sortie,
-            ]);
-        }
-        else {
-            return $this->render('sortie/create.html.twig', [
-                'sortieForm' => $sortieForm->createView()
+        try {
+            $user = $this->getUser()->getId();
+            $sortie =new Sortie();
+            $sortieForm= $this->createForm(SortieFormType::class, $sortie);
 
+
+            $sortieForm->handleRequest($request);
+
+            $participantActuelle = $entityManager->getReference('App:Participant',$user);
+            $sortie->setParticipantOrganisateur($participantActuelle);
+
+            $campusActuelle = $participantActuelle->getCampus();
+            $sortie->setCampusOrganisateur($campusActuelle);
+
+            if($sortieForm->isSubmitted() && $sortieForm->isValid()){
+                $boutonValue = $request->get("bouton_creer");
+
+                if($boutonValue == 'create'){
+                    $etat = $entityManager->getReference('App:Etat','1');
+                    $sortie->setEtat($etat);
+                }
+                elseif ($boutonValue == 'publish'){
+                    $etat = $entityManager->getReference('App:Etat','2');
+                    $sortie->setEtat($etat);
+                }
+
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'La sortie a bien été créé');
+                return $this->redirectToRoute('sortie_search');
+            }
+
+
+            return $this->render('sortie/create.html.twig', [
+                'sortieForm' => $sortieForm->createView(),
             ]);
+        } catch (\Exception $e) {
+            $this->addFlash('warning', $e->getMessage());
+            return $this->redirectToRoute('sortie_search');
+        }
+    }
+
+    /**
+     * @Route("/modifierSortie/{idSortie}_{idParticipant}", name="sortie_modifie")
+     */
+    public function modifierSortieForm(int $idParticipant, int $idSortie,
+                                       Request $request,
+                                       EntityManagerInterface $entityManager,
+                                       CheckDeviceFromUser $device): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        $userDevice = $device->checkDeviceFromUser();
+
+        if ($userDevice == 'isMobile') {
+            return $this->redirectToRoute('sortie_search');
+        }
+
+        try {
+
+            $user = $this->getUser();
+            $sortie = $entityManager->getRepository(Sortie::class)->find($idSortie);
+
+            if ($sortie->getParticipantOrganisateur() !== $user and !$this->isGranted("ROLE_ADMIN")) {
+                throw $this->createAccessDeniedException('Vous n\'êtes pas authorisé à accéder à cette page!');
+            }
+
+            $now = new \DateTime();
+            if (($sortie->getEtat() !== '1' or $sortie->getEtat() !== '2') &&
+                $now > $sortie->getDateHeureDebut() and !$this->isGranted("ROLE_ADMIN")) {
+                throw $this->createAccessDeniedException('Cette sortie ne peut plus être modifié, veuillez contacter un admin');
+            }
+
+            $sortie= $entityManager->getRepository(Sortie::class)->find($idSortie);
+
+            if (!$sortie){
+                throw $this->createNotFoundException('Pas de sortie trouvé');
+            }
+
+            $sortieForm= $this->createForm(SortieFormType::class, $sortie);
+
+
+            $sortieForm->handleRequest($request);
+
+            if($sortieForm->isSubmitted() && $sortieForm->isValid()){
+                $boutonValue = $request->get("bouton_modif");
+
+                if($boutonValue == 'create'){
+                    $etat = $entityManager->getReference('App:Etat','1');
+                    $sortie->setEtat($etat);
+                }
+                elseif ($boutonValue == 'publish'){
+                    $etat = $entityManager->getReference('App:Etat','2');
+                    $sortie->setEtat($etat);
+                }
+                elseif ($boutonValue == 'supprimer'){
+                    $etat = $entityManager->getReference('App:Etat','6');
+                    $sortie->setEtat($etat);
+                }
+
+
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'La sortie a bien été modifée');
+                return $this->redirectToRoute('sortie_search');
+            }
+
+            return $this->render('sortie/modifSortie.html.twig', [
+                'sortieForm' => $sortieForm->createView(),
+                'sortie' => $sortie
+            ]);
+
+        } catch (\Exception $e) {
+            $this->addFlash('warning', $e->getMessage());
+            return $this->redirectToRoute('sortie_search');
         }
     }
 

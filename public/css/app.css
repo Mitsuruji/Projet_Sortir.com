@@ -113,7 +113,7 @@ h1{
 /* formulaire*/
 form{
         display: block;
-    max-width: 40%;
+    max-width: fit-content;
     /*box-sizing: border-box;*/
 }
 
@@ -300,6 +300,37 @@ table[id="tableInfos"] td{
     background-color: rgba(197, 47, 150, 0.3);
 }
 
+/* creer et modif sortie */
+.main-create{
+}
+.createSortie{
+    display: grid;
+    justify-content: center;
+}
+.create-bloc1{
+    order: 1;
+    width: 100%;
+}
+.create-bloc2{
+    order: 2;
+    width: 40%;
+}
+.create-bloc3{
+    order: 3;
+    width: 40%;
+}
+
+.main-create h1{
+    text-align: center;
+    display: block;
+    width: 100%;
+    max-height: fit-content;
+}
+.main-modif h1{
+    display: block;
+    width: 100%;
+    max-height: fit-content;
+}
 
 /* ----------------------footer------------------- */
 footer{

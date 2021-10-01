@@ -3,9 +3,12 @@
 namespace App\Form;
 
 use App\Entity\Campus;
+use App\Entity\Lieu;
 use App\Entity\Sortie;
+use App\Entity\Ville;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -13,6 +16,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -41,7 +47,7 @@ class ModifierSortieType extends AbstractType
                 ]
             ])
 
-            ->add('dateLimiteInscription', DateType::class, [
+            ->add('dateLimiteInscription', DateTimeType::class, [
                 'label'=>'Date limite d\'inscription * :',
                 'widget' => 'single_text',
                 'constraints' => [
@@ -68,13 +74,12 @@ class ModifierSortieType extends AbstractType
 
             ->add('infosSortie', TextareaType::class, [
                 'label'=>'Description et informations complémentaires sur la sortie *:',
+                'required' => false,
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Merci de renseigner ce champ',
                     ]),
                     new Length([
-                        'min' => 10,
-                        'minMessage' => 'Merci de décrire plus amplement la sortie',
                         'max' => 300,
                     ]),
                 ]
@@ -91,21 +96,53 @@ class ModifierSortieType extends AbstractType
                 ]
             ])
 
-            ->add('sortieLieu', LieuSortieFormType::class, [
+            ->add('sortieVille', EntityType::class, [
+                'mapped' => false,
+                'class' => Ville::class,
+                'choice_label' => 'nom',
+                'label'=> 'Ville*: ',
+                'placeholder' => 'Choisir une ville',
+                'required' => false,
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Merci de choisir un lieu',
+                        'message' => 'Merci de choisir une ville',
                     ]),
                 ]
             ])
-        ;
+
+            ->add('sortieLieu', ChoiceType::class, [
+                'label' => 'Lieu*: ',
+                'placeholder' => 'Choisir une ville'
+            ]);
+
+        $formModifier = function (FormInterface $form, ?Ville $ville){
+            $lieu = (null === $ville) ? [] : $ville->getVilleLieux();
+//            $lieu = $ville->getVilleLieux();
+
+            $form->add('sortieLieu', EntityType::class, [
+                'class' => Lieu::class,
+                'choices' => $lieu,
+                'choice_label' => 'nom',
+                'label' => 'Lieu*: ',
+                'placeholder' => 'Choisir un lieu'
+            ]);
+        };
+
+        $builder->get('sortieVille')->addEventListener(
+            FormEvents::POST_SUBMIT,
+            function (FormEvent $event) use ($formModifier){
+                $form = $event->getForm();
+                $formModifier($form->getParent(),$form->getData());
+            }
+        );
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Sortie::class,
-            'method' => 'GET'
+            'method' => 'POST'
         ]);
     }
 }

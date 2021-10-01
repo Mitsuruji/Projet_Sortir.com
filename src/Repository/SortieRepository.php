@@ -25,7 +25,7 @@ class SortieRepository extends ServiceEntityRepository
     /**
      * Recupère les sorties en fonction des options de recherches
      */
-    public function findSearch(SearchOptions $searchOptions)
+    public function findSearch(SearchOptions $searchOptions): Paginator
     {
         $queryBuilder = $this
             ->createQueryBuilder('s')
@@ -40,11 +40,6 @@ class SortieRepository extends ServiceEntityRepository
             ;
 
 
-
-//        if (!empty($searchOptions->getFilterIsPasInscris()) && !empty($searchOptions->getFilterIsInscris())) {
-//            $queryBuilder = $queryBuilder
-//                ->addSelect('insc');
-//        }
         if (!empty($searchOptions->getFilterIsOrganisateur())) {
             $queryBuilder = $queryBuilder
                 ->andWhere('orga.id LIKE :currentUser')
@@ -92,6 +87,33 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('filterDateMax', $searchOptions->getFilterDateMax());
         }
 
+        $query = $queryBuilder->getQuery();
+        $paginator = new Paginator($query);
+
+        return $paginator;
+    }
+
+    public function findSearchMobile(SearchOptions $searchOptions, string $userDevice): Paginator
+    {
+        $queryBuilder = $this
+            ->createQueryBuilder('s')
+            ->join('s.etat','etat')
+            ->addSelect('etat')
+            ->leftjoin('s.participantInscrit','insc')
+            ->addSelect('insc')
+            ->join('s.participantOrganisateur','orga')
+            ->addSelect('orga')
+            ->join('s.campusOrganisateur', 'camp')
+            ->addSelect('camp')
+            ->join('camp.participants', 'cpartic')
+            ->addSelect('cpartic')
+        ;
+
+        if($userDevice == 'isMobile') {
+            $queryBuilder = $queryBuilder
+                ->andWhere('cpartic.id LIKE :currentUser')
+                ->setParameter('currentUser', $searchOptions->getCurrentUser());
+        }
 
         $query = $queryBuilder->getQuery();
         $paginator = new Paginator($query);
